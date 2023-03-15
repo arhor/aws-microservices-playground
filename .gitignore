@@ -1,0 +1,20 @@
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+
+# Logs
+logs/
+*.log
+
+# local env files
+.env.local
+.env.*.local
