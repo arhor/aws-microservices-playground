@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     constraints {
-        // declare version constraints here
+        api("com.ninja-squad:springmockk:${project.property("versions.springMockk")}")
     }
 }
 

@@ -13,3 +13,8 @@ pluginManagement {
 }
 
 rootProject.name = "aws-microservices-playground"
+
+include("app-service-a")
+include("app-service-b")
+include("app-service-c")
+include("app-service-d")
