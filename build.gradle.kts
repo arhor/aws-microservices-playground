@@ -4,7 +4,8 @@ plugins {
 
 dependencies {
     constraints {
-        api("com.ninja-squad:springmockk:${project.property("versions.springMockk")}")
+        api("com.amazonaws:aws-lambda-java-core:${project.property("versions.aws-lambda-java-core")}")
+        api("com.ninja-squad:springmockk:${project.property("versions.spring-mockk")}")
     }
 }
 
