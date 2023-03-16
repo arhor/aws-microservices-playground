@@ -14,4 +14,3 @@ tasks {
         gradleVersion = project.property("versions.gradle")!!.toString()
     }
 }
-
