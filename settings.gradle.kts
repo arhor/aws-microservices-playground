@@ -1,6 +1,6 @@
 pluginManagement {
     plugins {
-        fun prop(name: String): String = settings.extra[name].toString()
+        fun prop(name: String): String = extra[name].toString()
 
         // @formatter:off
         id("com.github.johnrengelman.shadow")    version prop("versions.gradle-shadow-plugin")
