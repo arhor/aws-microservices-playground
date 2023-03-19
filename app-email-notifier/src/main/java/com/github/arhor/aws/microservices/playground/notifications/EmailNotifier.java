@@ -2,10 +2,14 @@ package com.github.arhor.aws.microservices.playground.notifications;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.events.SQSBatchResponse;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 @SuppressWarnings("unused")
-public class EmailNotifier implements RequestHandler<SQSEvent, Void> {
+public class EmailNotifier implements RequestHandler<SQSEvent, SQSBatchResponse> {
 
     private final NotificationMapper notificationMapper;
 
@@ -18,13 +22,30 @@ public class EmailNotifier implements RequestHandler<SQSEvent, Void> {
     }
 
     @Override
-    public Void handleRequest(final SQSEvent input, final Context context) {
+    public SQSBatchResponse handleRequest(final SQSEvent input, final Context context) {
         final var logger = context.getLogger();
+        final var errors = new ArrayList<SQSBatchResponse.BatchItemFailure>();
 
-        // 1. remove outdated user records which were notified in previous months
+        for (final var message : input.getRecords()) {
+            try {
+                processSQSMessage(message);
+            } catch (final Exception exception) {
+                final var messageId = message.getMessageId();
+                logger.log(
+                    "[ERROR] An error occurred processing SQS message with id: %s - %s".formatted(
+                        messageId,
+                        exception
+                    )
+                );
+                errors.add(new SQSBatchResponse.BatchItemFailure(messageId));
+            }
+        }
 
-        logger.log("Received a request to the AWS lambda function with the following payload: " + input);
+        return new SQSBatchResponse(errors);
+    }
 
-        return null;
+    private void processSQSMessage(final SQSEvent.SQSMessage message) throws IOException {
+        final var notification = notificationMapper.convert(message.getBody());
+        // business logic...
     }
 }
