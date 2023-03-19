@@ -1,0 +1,33 @@
+name: E-mail Notifier Lambda CI
+
+on:
+  push:
+    branches:
+      - 'master'
+    paths:
+      - 'app-email-notifier/**'
+  pull_request:
+    branches:
+      - 'master'
+    paths:
+      - 'app-email-notifier/**'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Build E-mail Notifier Lambda
+        run: './gradlew :app-email-notifier:build'

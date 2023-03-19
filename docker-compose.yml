@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    hostname: localstack
+    networks:
+      - docker-network
+    volumes:
+      - ${TEMPDIR:-/tmp/localstack}:/tmp/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./scripts/localstack:/docker-entrypoint-initaws.d/
+    env_file:
+      - app-expenses/.env.local
+    environment:
+      SERVICES: ec2,lambda,rds,s3,sns,sqs
+
+  postgres-15:
+    container_name: postgres-15
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    tmpfs:
+      - "/var/lib/postgresql/data"
+
+  redis-7:
+    container_name: redis-7
+    image: docker.io/bitnami/redis:7.0
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - "docker-network"
+    ports:
+      - "6379:6379"
+
+networks:
+  docker-network:
+    name: docker-network
+    driver: bridge
