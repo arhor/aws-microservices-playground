@@ -10,6 +10,8 @@ dependencies {
         api("com.amazonaws:aws-lambda-java-core:${property("versions.aws-lambda-java-core")}")
         api("com.amazonaws:aws-lambda-java-events:${property("versions.aws-lambda-java-events")}")
         api("com.amazonaws:aws-lambda-java-tests:${property("versions.aws-lambda-java-tests")}")
+        api("com.google.dagger:dagger:${property("versions.dagger")}")
+        api("com.google.dagger:dagger-compiler:${property("versions.dagger")}")
         api("com.ninja-squad:springmockk:${property("versions.spring-mockk")}")
         api("org.assertj:assertj-core:${property("versions.assertj")}")
         api("org.junit.jupiter:junit-jupiter-params:${property("versions.junit-jupiter")}")

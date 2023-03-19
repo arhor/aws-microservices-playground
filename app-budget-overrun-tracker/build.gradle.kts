@@ -23,11 +23,15 @@ configurations {
 }
 
 dependencies {
+    annotationProcessor(platform(rootProject))
+    annotationProcessor("com.google.dagger:dagger-compiler")
+
     implementation(platform(rootProject))
     implementation("com.amazonaws:aws-java-sdk-dynamodb")
     implementation("com.amazonaws:aws-java-sdk-sns")
     implementation("com.amazonaws:aws-lambda-java-core")
     implementation("com.amazonaws:aws-lambda-java-events")
+    implementation("com.google.dagger:dagger")
 
     testImplementation("com.amazonaws:aws-lambda-java-tests")
     testImplementation("org.assertj:assertj-core")

@@ -1,8 +1,21 @@
 package com.github.arhor.aws.microservices.playground.notifications;
 
-import java.io.IOException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-public interface NotificationMapper {
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-    Notification convert(String data) throws IOException;
+@Singleton
+public class NotificationMapper {
+    private final ObjectMapper objectMapper;
+
+    @Inject
+    public NotificationMapper(final ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    public Notification mapStringToNotification(final String data) throws JsonProcessingException {
+        return objectMapper.readValue(data, Notification.class);
+    }
 }

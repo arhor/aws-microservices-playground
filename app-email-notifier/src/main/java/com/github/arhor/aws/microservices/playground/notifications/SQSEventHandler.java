@@ -5,30 +5,29 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SQSBatchResponse;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 @SuppressWarnings("unused")
-public class EmailNotifier implements RequestHandler<SQSEvent, SQSBatchResponse> {
+public class SQSEventHandler implements RequestHandler<SQSEvent, SQSBatchResponse> {
 
-    private final NotificationMapper notificationMapper;
+    final SQSMessageProcessor sqsMessageProcessor;
 
-    public EmailNotifier() {
-        this(new NotificationMapperImpl());
+    public SQSEventHandler() {
+        this(DaggerSQSMessageProcessorFactory.create().sqsMessageProcessor());
     }
 
-    EmailNotifier(final NotificationMapper notificationMapper) {
-        this.notificationMapper = notificationMapper;
+    SQSEventHandler(final SQSMessageProcessor sqsMessageProcessor) {
+        this.sqsMessageProcessor = sqsMessageProcessor;
     }
 
     @Override
-    public SQSBatchResponse handleRequest(final SQSEvent input, final Context context) {
+    public SQSBatchResponse handleRequest(final SQSEvent event, final Context context) {
         final var logger = context.getLogger();
         final var errors = new ArrayList<SQSBatchResponse.BatchItemFailure>();
 
-        for (final var message : input.getRecords()) {
+        for (final var message : event.getRecords()) {
             try {
-                processSQSMessage(message);
+                sqsMessageProcessor.process(message);
             } catch (final Exception exception) {
                 final var messageId = message.getMessageId();
                 logger.log(
@@ -40,12 +39,6 @@ public class EmailNotifier implements RequestHandler<SQSEvent, SQSBatchResponse>
                 errors.add(new SQSBatchResponse.BatchItemFailure(messageId));
             }
         }
-
         return new SQSBatchResponse(errors);
-    }
-
-    private void processSQSMessage(final SQSEvent.SQSMessage message) throws IOException {
-        final var notification = notificationMapper.convert(message.getBody());
-        // business logic...
     }
 }
