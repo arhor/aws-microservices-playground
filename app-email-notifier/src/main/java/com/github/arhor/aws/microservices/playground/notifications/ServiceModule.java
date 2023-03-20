@@ -6,6 +6,7 @@ import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
+import java.net.http.HttpClient;
 
 @Module
 public interface ServiceModule {
@@ -14,5 +15,11 @@ public interface ServiceModule {
     @Singleton
     static ObjectMapper objectMapper() {
         return JsonMapper.builder().build();
+    }
+
+    @Provides
+    @Singleton
+    static HttpClient httpClient() {
+        return HttpClient.newHttpClient();
     }
 }

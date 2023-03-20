@@ -7,19 +7,30 @@ import com.amazonaws.services.lambda.runtime.events.ScheduledEvent;
 @SuppressWarnings("unused")
 public class ScheduledEventHandler implements RequestHandler<ScheduledEvent, Void> {
 
-    private final BudgetOverrunTrackingService budgetOverrunTrackingService;
+    private final BudgetOverrunTrackerService budgetOverrunTrackerService;
 
     public ScheduledEventHandler() {
-        this(DaggerServiceFactory.create().budgetOverrunTrackingService());
+        this(DaggerServiceFactory.create().budgetOverrunTrackerService());
     }
 
-    ScheduledEventHandler(final BudgetOverrunTrackingService budgetOverrunTrackingService) {
-        this.budgetOverrunTrackingService = budgetOverrunTrackingService;
+    ScheduledEventHandler(final BudgetOverrunTrackerService budgetOverrunTrackerService) {
+        this.budgetOverrunTrackerService = budgetOverrunTrackerService;
     }
 
     @Override
     public Void handleRequest(final ScheduledEvent input, final Context context) {
-        budgetOverrunTrackingService.findOverrunsAndSendNotifications();
+        final var logger = context.getLogger();
+        try {
+            budgetOverrunTrackerService.findOverrunsAndSendNotifications();
+        } catch (final Exception exception) {
+            logger.log(
+                "[ERROR] An error occurred handling scheduled event with id: %s - %s".formatted(
+                    input.getId(),
+                    exception
+                )
+            );
+            throw new RuntimeException(exception);
+        }
         return null;
     }
 }

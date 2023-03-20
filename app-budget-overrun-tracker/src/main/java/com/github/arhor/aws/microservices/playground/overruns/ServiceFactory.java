@@ -8,5 +8,5 @@ import javax.inject.Singleton;
 @Component(modules = ServiceModule.class)
 public interface ServiceFactory {
 
-    BudgetOverrunTrackingService budgetOverrunTrackingService();
+    BudgetOverrunTrackerService budgetOverrunTrackerService();
 }

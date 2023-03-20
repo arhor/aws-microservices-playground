@@ -10,6 +10,7 @@ import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
+import java.net.http.HttpClient;
 
 @Module
 public interface ServiceModule {
@@ -30,5 +31,11 @@ public interface ServiceModule {
     @Singleton
     static AmazonDynamoDB AmazonDynamoDB() {
         return AmazonDynamoDBClientBuilder.defaultClient();
+    }
+
+    @Provides
+    @Singleton
+    static HttpClient httpClient() {
+        return HttpClient.newHttpClient();
     }
 }
