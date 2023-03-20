@@ -7,15 +7,15 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class NotificationMapper {
+public class NotificationReadingConverter {
     private final ObjectMapper objectMapper;
 
     @Inject
-    public NotificationMapper(final ObjectMapper objectMapper) {
+    public NotificationReadingConverter(final ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
-    public Notification mapStringToNotification(final String data) throws JsonProcessingException {
+    public Notification convert(final String data) throws JsonProcessingException {
         return objectMapper.readValue(data, Notification.class);
     }
 }

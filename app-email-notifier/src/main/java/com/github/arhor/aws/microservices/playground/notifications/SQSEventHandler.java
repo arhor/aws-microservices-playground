@@ -10,14 +10,14 @@ import java.util.ArrayList;
 @SuppressWarnings("unused")
 public class SQSEventHandler implements RequestHandler<SQSEvent, SQSBatchResponse> {
 
-    final SQSMessageProcessor sqsMessageProcessor;
+    final SQSMessageProcessorService sqsMessageProcessorService;
 
     public SQSEventHandler() {
-        this(DaggerSQSMessageProcessorFactory.create().sqsMessageProcessor());
+        this(DaggerServiceFactory.create().sqsMessageProcessorService());
     }
 
-    SQSEventHandler(final SQSMessageProcessor sqsMessageProcessor) {
-        this.sqsMessageProcessor = sqsMessageProcessor;
+    SQSEventHandler(final SQSMessageProcessorService sqsMessageProcessorService) {
+        this.sqsMessageProcessorService = sqsMessageProcessorService;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class SQSEventHandler implements RequestHandler<SQSEvent, SQSBatchRespons
 
         for (final var message : event.getRecords()) {
             try {
-                sqsMessageProcessor.process(message);
+                sqsMessageProcessorService.process(message);
             } catch (final Exception exception) {
                 final var messageId = message.getMessageId();
                 logger.log(

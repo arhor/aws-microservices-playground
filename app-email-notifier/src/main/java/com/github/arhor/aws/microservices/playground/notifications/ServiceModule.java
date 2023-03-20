@@ -8,7 +8,7 @@ import dagger.Provides;
 import javax.inject.Singleton;
 
 @Module
-public interface SQSMessageProcessorModule {
+public interface ServiceModule {
 
     @Provides
     @Singleton

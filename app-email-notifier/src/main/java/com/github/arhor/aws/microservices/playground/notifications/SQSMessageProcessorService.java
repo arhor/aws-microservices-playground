@@ -7,17 +7,17 @@ import javax.inject.Singleton;
 import java.io.IOException;
 
 @Singleton
-public class SQSMessageProcessor {
+public class SQSMessageProcessorService {
 
-    private final NotificationMapper notificationMapper;
+    private final NotificationReadingConverter notificationReadingConverter;
 
     @Inject
-    public SQSMessageProcessor(final NotificationMapper notificationMapper) {
-        this.notificationMapper = notificationMapper;
+    public SQSMessageProcessorService(final NotificationReadingConverter notificationReadingConverter) {
+        this.notificationReadingConverter = notificationReadingConverter;
     }
 
     public void process(final SQSEvent.SQSMessage message) throws IOException {
-        final var notification = notificationMapper.mapStringToNotification(message.getBody());
+        final var notification = notificationReadingConverter.convert(message.getBody());
 
         System.out.println(notification);
 
