@@ -14,14 +14,6 @@ repositories {
     mavenCentral()
 }
 
-configurations {
-    implementation {
-        exclude(module = "apache-client")
-        exclude(module = "commons-logging")
-        exclude(module = "netty-nio-client")
-    }
-}
-
 dependencies {
     annotationProcessor(platform(rootProject))
     annotationProcessor("com.google.dagger:dagger-compiler")

@@ -7,7 +7,7 @@ import com.amazonaws.services.lambda.runtime.events.ScheduledEvent;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 
 @SuppressWarnings("unused")
-public class BudgetOverrunTracker implements RequestHandler<ScheduledEvent, Void> {
+public class ScheduledEventHandler implements RequestHandler<ScheduledEvent, Void> {
 
     @Override
     public Void handleRequest(final ScheduledEvent input, final Context context) {
