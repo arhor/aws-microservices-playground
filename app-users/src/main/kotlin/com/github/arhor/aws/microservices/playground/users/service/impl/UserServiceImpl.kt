@@ -9,7 +9,9 @@ import com.github.arhor.aws.microservices.playground.users.service.dto.UserUpdat
 import com.github.arhor.aws.microservices.playground.users.service.exception.EntityDuplicateException
 import com.github.arhor.aws.microservices.playground.users.service.exception.EntityNotFoundException
 import com.github.arhor.aws.microservices.playground.users.service.mapper.UserMapper
+import org.springframework.dao.OptimisticLockingFailureException
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -24,11 +26,15 @@ class UserServiceImpl(
         if (userRepository.existsByEmail(createRequest.email)) {
             throw EntityDuplicateException("User", "email=${createRequest.email}")
         }
-        userMapper.mapToUser(createRequest).let(userRepository::save).let(userMapper::mapToUserResponse)
-
-        TODO("Not yet implemented")
+        return userMapper.mapToUser(createRequest)
+            .let(userRepository::save)
+            .let(userMapper::mapToUserResponse)
     }
 
+    @Retryable(
+        retryFor = [OptimisticLockingFailureException::class],
+        maxAttemptsExpression = "\${configuration.retry-attempts}"
+    )
     @Transactional
     override fun updateUser(userId: Long, updateRequest: UserUpdateRequestDto): UserResponseDto {
         var user = getUserOrThrowException(userId)
@@ -40,7 +46,8 @@ class UserServiceImpl(
             user = user.copy(budget = user.budget.copy(limit = it))
         }
 
-        return userRepository.save(user).let(userMapper::mapToUserResponse)
+        return userRepository.save(user)
+            .let(userMapper::mapToUserResponse)
     }
 
     @Transactional

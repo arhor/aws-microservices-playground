@@ -1,0 +1,2 @@
+configuration:
+  retry-attempts: 5
