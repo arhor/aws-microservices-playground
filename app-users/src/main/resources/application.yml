@@ -1,2 +1,60 @@
-configuration:
+server:
+  port: ${PORT:0}
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  application:
+    name: Users Service
+  aop:
+    proxy-target-class: false
+  main:
+    allow-bean-definition-overriding: true
+  web:
+    locale: en
+    resources:
+      add-mappings: false
+  profiles:
+    active: ${SPRING_ACTIVE_PROFILES:dev}
+  jmx:
+    enabled: false
+  mvc:
+    throw-exception-if-no-handler-found: true
+    format:
+      date-time: iso
+      date: iso
+      time: iso
+  sql:
+    init:
+      platform: postgres
+  r2dbc:
+    url: ${R2DBC_DATABASE_URL}
+    username: ${R2DBC_DATABASE_USERNAME}
+    password: ${R2DBC_DATABASE_PASSWORD}
+  flyway:
+    url: ${JDBC_DATABASE_URL}
+    user: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0.0
+  output:
+    ansi:
+      enabled: always
+
+application-props:
   retry-attempts: 5
+  api-path-prefix: /api
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+    import:
+      - optional:file:app-users/.env.local[.properties]
+      - optional:file:.env.local[.properties]
+  jmx:
+    enabled: true

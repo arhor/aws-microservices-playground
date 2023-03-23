@@ -4,6 +4,8 @@ import com.github.arhor.aws.microservices.playground.users.service.UserService
 import com.github.arhor.aws.microservices.playground.users.service.dto.UserCreateRequestDto
 import com.github.arhor.aws.microservices.playground.users.service.dto.UserResponseDto
 import com.github.arhor.aws.microservices.playground.users.service.dto.UserUpdateRequestDto
+import kotlinx.coroutines.flow.Flow
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.util.UriComponentsBuilder
@@ -15,7 +17,7 @@ class UserController(
 ) {
 
     @PostMapping
-    fun createUser(
+    suspend fun createUser(
         @RequestBody
         createRequest: UserCreateRequestDto,
         uriBuilder: UriComponentsBuilder,
@@ -27,18 +29,22 @@ class UserController(
     }
 
     @PatchMapping("/{userId}")
-    fun updateUser(@RequestBody updateRequest: UserUpdateRequestDto, userId: Long): UserResponseDto =
+    suspend fun updateUser(
+        @PathVariable userId: Long,
+        @RequestBody updateRequest: UserUpdateRequestDto
+    ): UserResponseDto =
         userService.updateUser(userId, updateRequest)
 
     @DeleteMapping("/{userId}")
-    fun deleteUser(userId: Long): Unit =
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    suspend fun deleteUser(@PathVariable userId: Long): Unit =
         userService.deleteUserById(userId)
 
     @GetMapping("/{userId}")
-    fun getUserById(userId: Long): UserResponseDto =
+    suspend fun getUserById(@PathVariable userId: Long): UserResponseDto =
         userService.getUserById(userId)
 
     @GetMapping
-    fun getAllUsers(): List<UserResponseDto> =
+    fun getAllUsers(): Flow<UserResponseDto> =
         userService.getAllUsers()
 }
