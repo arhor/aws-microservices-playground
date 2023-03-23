@@ -2,11 +2,15 @@ plugins {
     id("java-platform")
 }
 
+javaPlatform {
+    allowDependencies()
+}
+
 dependencies {
+    api(platform("com.amazonaws:aws-java-sdk-bom:${property("versions.aws-java-sdk")}"))
+    api(platform("org.testcontainers:testcontainers-bom:${project.property("versions.testcontainers")}"))
+
     constraints {
-        api("com.amazonaws:aws-java-sdk-dynamodb:${property("versions.aws-java-sdk")}")
-        api("com.amazonaws:aws-java-sdk-sns:${property("versions.aws-java-sdk")}")
-        api("com.amazonaws:aws-java-sdk-sqs:${property("versions.aws-java-sdk")}")
         api("com.amazonaws:aws-lambda-java-core:${property("versions.aws-lambda-java-core")}")
         api("com.amazonaws:aws-lambda-java-events:${property("versions.aws-lambda-java-events")}")
         api("com.amazonaws:aws-lambda-java-tests:${property("versions.aws-lambda-java-tests")}")

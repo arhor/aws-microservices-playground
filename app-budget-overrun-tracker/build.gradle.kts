@@ -19,6 +19,7 @@ dependencies {
     annotationProcessor("com.google.dagger:dagger-compiler")
 
     implementation(platform(rootProject))
+    implementation(platform("com.amazonaws:aws-java-sdk-bom"))
     implementation("com.amazonaws:aws-java-sdk-dynamodb")
     implementation("com.amazonaws:aws-java-sdk-sns")
     implementation("com.amazonaws:aws-lambda-java-core")

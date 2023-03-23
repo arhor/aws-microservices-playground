@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id("io.spring.dependency-management")
     id("org.springframework.boot")
@@ -69,12 +72,6 @@ dependencies {
     testImplementation("org.testcontainers:postgresql")
 }
 
-dependencyManagement {
-    imports {
-        mavenBom("org.testcontainers:testcontainers-bom:${project.property("versions.testcontainers")}")
-    }
-}
-
 tasks {
     withType<JavaCompile> {
         options.compilerArgs = listOf(
@@ -85,14 +82,16 @@ tasks {
         )
     }
 
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions {
-            freeCompilerArgs = listOf(
-                "-Xjsr305=strict",
-                "-Xjvm-default=all",
+    withType<KotlinCompile> {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.fromTarget(project.property("versions.java").toString()))
+            javaParameters.set(true)
+            freeCompilerArgs.set(
+                listOf(
+                    "-Xjsr305=strict",
+                    "-Xjvm-default=all",
+                )
             )
-            jvmTarget = "17"
-            javaParameters = true
         }
     }
 
