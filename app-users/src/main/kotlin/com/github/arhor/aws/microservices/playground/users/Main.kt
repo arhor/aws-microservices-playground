@@ -9,10 +9,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
 import org.springframework.retry.annotation.EnableRetry
 import java.lang.invoke.MethodHandles
-import java.time.Clock
-import java.time.ZonedDateTime
-import java.time.temporal.ChronoUnit
-import java.util.function.Supplier
 
 private val log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
 
@@ -22,21 +18,11 @@ class Main {
 
     @Bean
     @Profile("dev")
-    fun <T> displayApplicationInfo(context: T)
-        where T : WebServerApplicationContext = ApplicationRunner {
-
+    fun displayApplicationInfo(context: WebServerApplicationContext) = ApplicationRunner {
         val port = context.webServer.port
         val path = context.environment.getProperty("spring.webflux.base-path", "")
 
         log.info("Local access URL: http://localhost:{}{}", port, path)
-    }
-
-    @Bean
-    fun currentDateTimeSupplier() = Supplier {
-        val systemUTC = Clock.systemUTC()
-        val timestamp = ZonedDateTime.now(systemUTC)
-
-        timestamp.truncatedTo(ChronoUnit.MILLIS)
     }
 }
 
