@@ -1,13 +1,22 @@
 version: "3.8"
 
 services:
+  expenses-service-db:
+    container_name: expenses-service-db
+    image: postgres:12
+    ports:
+      - "5433:5432"
+    tmpfs:
+      - "/var/lib/postgresql/data"
+    env_file:
+      - "app-expenses/.env.local"
+
   users-service-db:
     container_name: users-service-db
     image: postgres:12
     ports:
-      - "5433:5433"
+      - "5434:5432"
     tmpfs:
       - "/var/lib/postgresql/data"
     env_file:
       - "app-users/.env.local"
-    command: -p 5433
