@@ -1,4 +1,4 @@
-package com.github.arhor.aws.microservices.playground.users.config
+package com.github.arhor.aws.microservices.playground.expenses.config
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration

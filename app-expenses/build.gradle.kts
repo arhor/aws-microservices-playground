@@ -16,10 +16,6 @@ java {
     }
 }
 
-kapt {
-    keepJavacAnnotationProcessors = true
-}
-
 repositories {
     mavenCentral()
 }
@@ -27,9 +23,6 @@ repositories {
 configurations {
     compileOnly {
         extendsFrom(annotationProcessor.get())
-    }
-    implementation {
-        exclude(group = "org.springframework.boot", module = "spring-boot-starter-tomcat")
     }
     testImplementation {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
@@ -51,37 +44,34 @@ dependencies {
     compileOnly("org.mapstruct:mapstruct")
 
     runtimeOnly("org.postgresql:postgresql")
+    runtimeOnly("org.postgresql:r2dbc-postgresql")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     implementation(platform(rootProject))
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("com.google.code.findbugs:jsr305")
+    implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-cache")
-    implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
-    implementation("org.springframework.boot:spring-boot-starter-undertow")
+    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.retry:spring-retry")
 
     testImplementation("com.ninja-squad:springmockk")
+    testImplementation("io.projectreactor:reactor-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
 }
 
 tasks {
-    withType<JavaCompile> {
-        options.compilerArgs = listOf(
-            "-Xlint:deprecation",
-            "-Xlint:fallthrough",
-            "-Xlint:unchecked",
-            "-parameters",
-        )
-    }
-
     withType<KotlinCompile> {
         compilerOptions {
             jvmTarget.set(JvmTarget.fromTarget(project.property("versions.java").toString()))

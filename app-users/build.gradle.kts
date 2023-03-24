@@ -16,10 +16,6 @@ java {
     }
 }
 
-kapt {
-    keepJavacAnnotationProcessors = true
-}
-
 repositories {
     mavenCentral()
 }
@@ -56,7 +52,6 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("com.google.code.findbugs:jsr305")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
-
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
@@ -76,15 +71,6 @@ dependencies {
 }
 
 tasks {
-    withType<JavaCompile> {
-        options.compilerArgs = listOf(
-            "-Xlint:deprecation",
-            "-Xlint:fallthrough",
-            "-Xlint:unchecked",
-            "-parameters",
-        )
-    }
-
     withType<KotlinCompile> {
         compilerOptions {
             jvmTarget.set(JvmTarget.fromTarget(project.property("versions.java").toString()))
