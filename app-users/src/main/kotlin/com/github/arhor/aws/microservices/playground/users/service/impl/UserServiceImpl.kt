@@ -24,7 +24,7 @@ class UserServiceImpl(
     @Transactional
     override fun createUser(createRequest: UserCreateRequestDto): UserResponseDto {
         if (userRepository.existsByEmail(createRequest.email)) {
-            throw EntityDuplicateException("User", "email=${createRequest.email}")
+            throw EntityDuplicateException("User", "email = ${createRequest.email}")
         }
         return userMapper.mapToUser(createRequest)
             .let { userRepository.save(it) }
@@ -53,20 +53,23 @@ class UserServiceImpl(
     @Transactional
     override fun deleteUserById(userId: Long) {
         if (!userRepository.existsById(userId)) {
-            throw EntityNotFoundException("User", "id=${userId}")
+            throw EntityNotFoundException("User", "id = $userId")
         }
         userRepository.deleteById(userId)
     }
 
-    override fun getUserById(userId: Long): UserResponseDto =
-        getUserOrThrowException(userId)
+    override fun getUserById(userId: Long): UserResponseDto {
+        return getUserOrThrowException(userId)
             .let(userMapper::mapToUserResponse)
+    }
 
-    override fun getAllUsers(): List<UserResponseDto> =
-        userRepository.findAll()
+    override fun getAllUsers(): List<UserResponseDto> {
+        return userRepository
+            .findAll()
             .map(userMapper::mapToUserResponse)
+    }
 
     private fun getUserOrThrowException(userId: Long): User =
         userRepository.findByIdOrNull(userId)
-            ?: throw EntityNotFoundException("User", "id=${userId}")
+            ?: throw EntityNotFoundException("User", "id = $userId")
 }
