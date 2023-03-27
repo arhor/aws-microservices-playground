@@ -2,8 +2,8 @@ package com.github.arhor.aws.microservices.playground.expenses.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.web.reactive.function.server.ServerResponse
-import org.springframework.web.reactive.function.server.router
+import org.springframework.web.servlet.function.ServerResponse
+import org.springframework.web.servlet.function.router
 
 @Configuration(proxyBeanMethods = false)
 class ConfigureRouter {
