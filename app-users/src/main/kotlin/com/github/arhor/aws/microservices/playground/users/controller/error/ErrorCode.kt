@@ -10,11 +10,15 @@ enum class ErrorCode(val type: Type, val value: Int, val label: String) {
     // @formatter:off
     UNCATEGORIZED   (Type.GEN, 0x00000, "error.server.internal"),
     NO_HANDLER_FOUND(Type.GEN, 0x00001, "error.server.no-handler"),
+
+    ENTITY_NOT_FOUND(Type.DAT, 0x00000, "error.entity.not-found"),
+    ENTITY_DUPLICATE(Type.DAT, 0x00001, "error.entity.duplicate"),
     // @formatter:on
     ;
 
     enum class Type {
         GEN,
+        DAT,
         ;
     }
 

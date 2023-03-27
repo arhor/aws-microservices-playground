@@ -1,5 +1,7 @@
 package com.github.arhor.aws.microservices.playground.users.controller.error
 
+import com.github.arhor.aws.microservices.playground.users.service.exception.EntityDuplicateException
+import com.github.arhor.aws.microservices.playground.users.service.exception.EntityNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.context.MessageSource
 import org.springframework.http.HttpStatus
@@ -38,6 +40,32 @@ class GlobalExceptionHandler(
             args = arrayOf(
                 noHandlerFoundException.httpMethod,
                 noHandlerFoundException.requestURL,
+            )
+        )
+
+    @ExceptionHandler(EntityNotFoundException::class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    fun handleEntityNotFoundException(entityDuplicateException: EntityNotFoundException, requestLocale: Locale) =
+        createErrorResponse(
+            exception = entityDuplicateException,
+            errorCode = ErrorCode.ENTITY_NOT_FOUND,
+            locale = requestLocale,
+            args = arrayOf(
+                entityDuplicateException.entity,
+                entityDuplicateException.condition,
+            )
+        )
+
+    @ExceptionHandler(EntityDuplicateException::class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    fun handleEntityDuplicateException(entityDuplicateException: EntityDuplicateException, requestLocale: Locale) =
+        createErrorResponse(
+            exception = entityDuplicateException,
+            errorCode = ErrorCode.ENTITY_DUPLICATE,
+            locale = requestLocale,
+            args = arrayOf(
+                entityDuplicateException.entity,
+                entityDuplicateException.condition,
             )
         )
 
