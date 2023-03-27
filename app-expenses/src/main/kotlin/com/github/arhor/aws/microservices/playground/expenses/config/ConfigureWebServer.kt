@@ -1,5 +1,6 @@
 package com.github.arhor.aws.microservices.playground.expenses.config
 
+import com.github.arhor.aws.microservices.playground.expenses.config.props.ApplicationProps
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.bind.annotation.RestController

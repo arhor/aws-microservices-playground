@@ -1,4 +1,4 @@
-package com.github.arhor.aws.microservices.playground.expenses.config
+package com.github.arhor.aws.microservices.playground.expenses.config.props
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.bind.ConstructorBinding

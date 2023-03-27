@@ -1,3 +1,5 @@
 package com.github.arhor.aws.microservices.playground.users
 
-const val DEFAULT_BUDGET_LIMIT = 100.0
+import java.math.BigDecimal
+
+val DEFAULT_BUDGET_LIMIT = BigDecimal("100.0")
