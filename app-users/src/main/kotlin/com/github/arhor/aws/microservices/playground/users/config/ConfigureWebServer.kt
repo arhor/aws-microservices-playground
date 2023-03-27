@@ -4,14 +4,14 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.method.HandlerTypePredicate.forAnnotation
-import org.springframework.web.reactive.config.PathMatchConfigurer
-import org.springframework.web.reactive.config.WebFluxConfigurer
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(ApplicationProps::class)
-class ConfigureWebServer(private val applicationProps: ApplicationProps) : WebFluxConfigurer {
+class ConfigureWebServer(private val applicationProps: ApplicationProps) : WebMvcConfigurer {
 
-    override fun configurePathMatching(configurer: PathMatchConfigurer) {
+    override fun configurePathMatch(configurer: PathMatchConfigurer) {
         configurer.addPathPrefix(applicationProps.apiPathPrefix, classesAnnotatedWith<RestController>())
     }
 

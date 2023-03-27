@@ -7,8 +7,10 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer
 
 @JsonSerialize(using = ErrorCode.Serializer::class)
 enum class ErrorCode(val type: Type, val value: Int, val label: String) {
-
-    UNCATEGORIZED(Type.GEN, 0x00000, "error.server.internal"),
+    // @formatter:off
+    UNCATEGORIZED   (Type.GEN, 0x00000, "error.server.internal"),
+    NO_HANDLER_FOUND(Type.GEN, 0x00001, "error.server.no-handler"),
+    // @formatter:on
     ;
 
     enum class Type {

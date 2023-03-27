@@ -8,9 +8,10 @@ import org.springframework.boot.web.context.WebServerApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
 import org.springframework.retry.annotation.EnableRetry
+import org.springframework.web.context.WebApplicationContext
 import java.lang.invoke.MethodHandles
 
-private val log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
+private val logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
 
 @EnableRetry
 @SpringBootApplication(proxyBeanMethods = false)
@@ -18,11 +19,14 @@ class Main {
 
     @Bean
     @Profile("dev")
-    fun displayApplicationInfo(context: WebServerApplicationContext) = ApplicationRunner {
-        val port = context.webServer.port
-        val path = context.environment.getProperty("spring.webflux.base-path", "")
+    fun <T> displayApplicationInfo(context: T)
+        where T : WebApplicationContext,
+              T : WebServerApplicationContext = ApplicationRunner {
 
-        log.info("Local access URL: http://localhost:{}{}", port, path)
+        val port = context.webServer.port
+        val path = context.servletContext?.contextPath ?: ""
+
+        logger.info("Local access URL: http://localhost:{}{}", port, path)
     }
 }
 

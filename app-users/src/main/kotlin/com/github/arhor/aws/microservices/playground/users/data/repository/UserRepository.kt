@@ -1,9 +1,9 @@
 package com.github.arhor.aws.microservices.playground.users.data.repository
 
 import com.github.arhor.aws.microservices.playground.users.data.model.User
-import org.springframework.data.repository.kotlin.CoroutineCrudRepository
+import org.springframework.data.repository.CrudRepository
 
-interface UserRepository : CoroutineCrudRepository<User, Long> {
+interface UserRepository : CrudRepository<User, Long> {
 
-    suspend fun existsByEmail(email: String): Boolean
+    fun existsByEmail(email: String): Boolean
 }

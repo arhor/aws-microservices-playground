@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import org.springframework.web.servlet.NoHandlerFoundException
 import java.lang.invoke.MethodHandles
 import java.time.ZonedDateTime
 import java.util.Locale
@@ -20,22 +21,38 @@ class GlobalExceptionHandler(
 
     @ExceptionHandler(Exception::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    fun handleException(exception: Exception, locale: Locale): ErrorResponse {
-        return createErrorResponse(exception, ErrorCode.UNCATEGORIZED, locale)
-    }
+    fun handleException(generalException: Exception, requestLocale: Locale) =
+        createErrorResponse(
+            exception = generalException,
+            errorCode = ErrorCode.UNCATEGORIZED,
+            locale = requestLocale,
+        )
+
+    @ExceptionHandler(NoHandlerFoundException::class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    fun handleNoHandlerFoundException(noHandlerFoundException: NoHandlerFoundException, requestLocale: Locale) =
+        createErrorResponse(
+            exception = noHandlerFoundException,
+            errorCode = ErrorCode.NO_HANDLER_FOUND,
+            locale = requestLocale,
+            args = arrayOf(
+                noHandlerFoundException.httpMethod,
+                noHandlerFoundException.requestURL,
+            )
+        )
 
     private fun createErrorResponse(
         exception: Exception,
-        code: ErrorCode,
+        errorCode: ErrorCode,
         locale: Locale,
         details: List<String> = emptyList(),
         vararg args: Any?
     ): ErrorResponse {
         log.error(exception.message, exception)
 
-        val localizedMessage = messages.getMessage(code.label, args, locale)
+        val localizedMessage = messages.getMessage(errorCode.label, args, locale)
         val currentTimestamp = currentDateTimeSupplier.get()
 
-        return ErrorResponse(code, localizedMessage, details, currentTimestamp)
+        return ErrorResponse(errorCode, localizedMessage, details, currentTimestamp)
     }
 }

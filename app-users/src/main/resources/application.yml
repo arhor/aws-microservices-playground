@@ -25,17 +25,23 @@ spring:
       date-time: iso
       date: iso
       time: iso
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
   sql:
     init:
       platform: postgres
-  r2dbc:
-    url: ${R2DBC_DATABASE_URL}
-    username: ${R2DBC_DATABASE_USERNAME}
-    password: ${R2DBC_DATABASE_PASSWORD}
-  flyway:
+  datasource:
+    driverClassName: org.postgresql.Driver
     url: ${JDBC_DATABASE_URL}
-    user: ${JDBC_DATABASE_USERNAME}
+    username: ${JDBC_DATABASE_USERNAME}
     password: ${JDBC_DATABASE_PASSWORD}
+    hikari:
+      auto-commit: false
+  flyway:
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
     enabled: true
     baseline-on-migrate: true
     baseline-version: 0.0
