@@ -32,9 +32,9 @@ data class User(
 
     @CreatedDate
     @Column("created_date_time")
-    val createdDateTime: ZonedDateTime,
+    val createdDateTime: ZonedDateTime? = null,
 
     @LastModifiedDate
     @Column("updated_date_time")
-    val updatedDateTime: ZonedDateTime,
+    val updatedDateTime: ZonedDateTime? = null,
 )

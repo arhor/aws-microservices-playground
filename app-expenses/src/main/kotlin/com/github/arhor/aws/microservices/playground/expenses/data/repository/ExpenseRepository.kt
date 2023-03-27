@@ -4,6 +4,7 @@ import com.github.arhor.aws.microservices.playground.expenses.data.model.Expense
 import com.github.arhor.aws.microservices.playground.expenses.data.model.projection.BudgetOverrunDetails
 import org.springframework.data.jdbc.repository.query.Query
 import org.springframework.data.repository.CrudRepository
+import org.springframework.data.repository.query.Param
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.stream.Stream

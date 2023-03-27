@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Immutable
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import java.math.BigDecimal
-import java.time.LocalTime
+import java.time.LocalDate
 
 @Immutable
 @Table("expenses")
@@ -21,5 +21,5 @@ data class Expense(
     val amount: BigDecimal,
 
     @Column("date")
-    val date: LocalTime,
+    val date: LocalDate,
 )

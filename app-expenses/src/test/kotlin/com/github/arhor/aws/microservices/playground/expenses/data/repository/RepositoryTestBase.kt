@@ -1,5 +1,6 @@
 package com.github.arhor.aws.microservices.playground.expenses.data.repository
 
+import com.github.arhor.aws.microservices.playground.expenses.config.ConfigureAdditionalBeans
 import com.github.arhor.aws.microservices.playground.expenses.config.ConfigureDatabase
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
@@ -14,7 +15,12 @@ import org.testcontainers.junit.jupiter.Testcontainers
 @DataJdbcTest
 @DirtiesContext
 @Testcontainers(disabledWithoutDocker = true)
-@ContextConfiguration(classes = [ConfigureDatabase::class])
+@ContextConfiguration(
+    classes = [
+        ConfigureDatabase::class,
+        ConfigureAdditionalBeans::class,
+    ]
+)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 internal abstract class RepositoryTestBase {
 
