@@ -1,4 +1,4 @@
-### QUESTION 1 - Give me an example of a challenging task you have worked on in the past.
+### QUESTION 1 (with example answers) - Give me an example of a challenging task you have worked on in the past.
 
 **Situation**:
 
@@ -27,7 +27,7 @@ horizontal scaling limit was increased from 100 up to 800-1000 instances.
 
 ### QUESTION 2 - Give me an example of a time when you had to solve a client problem. What approach did you take?
 
-**Situation**: Sudden increase in application response time on Prod. `Application was hosted on AWS.`
+**Situation**: Describe the situation and when it took place.
 
 **Task**: Explain the task and what was the goal.
 
@@ -57,7 +57,7 @@ horizontal scaling limit was increased from 100 up to 800-1000 instances.
 
 ### QUESTION 5 - Tell me of a situation when you had to convince a client to use a specific technology. How did you address the situation?
 
-**Situation**:
+**Situation**: Describe the situation and when it took place.
 
 **Task**: Explain the task and what was the goal.
 
@@ -66,3 +66,11 @@ horizontal scaling limit was increased from 100 up to 800-1000 instances.
 **Result**: Conclude with the result of your action.
 
 ### QUESTION 6 - Tell me of a situation when failed something?
+
+**Situation**: Describe the situation and when it took place.
+
+**Task**: Explain the task and what was the goal.
+
+**Action**: Provide details about the action you took to attain this.
+
+**Result**: Conclude with the result of your action.
