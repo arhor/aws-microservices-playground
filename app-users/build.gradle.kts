@@ -3,16 +3,32 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("io.spring.dependency-management")
-    id("org.springframework.boot")
+    id("org.graalvm.buildtools.native")
     id("org.jetbrains.kotlin.jvm")
     id("org.jetbrains.kotlin.kapt")
     id("org.jetbrains.kotlin.plugin.spring")
+    id("org.springframework.boot")
 }
 
+val javaVersion = project.property("versions.java")!!.toString()
+
 java {
-    project.property("versions.java")!!.let(JavaVersion::toVersion).let {
+    javaVersion.let(JavaVersion::toVersion).let {
         sourceCompatibility = it
         targetCompatibility = it
+    }
+}
+
+graalvmNative {
+    binaries {
+        named("main") {
+            javaLauncher.set(
+                javaToolchains.launcherFor {
+                    languageVersion.set(JavaLanguageVersion.of(javaVersion))
+                    vendor.set(JvmVendorSpec.matching("GraalVM Community"))
+                }
+            )
+        }
     }
 }
 
@@ -23,9 +39,6 @@ repositories {
 configurations {
     compileOnly {
         extendsFrom(annotationProcessor.get())
-    }
-    implementation {
-        exclude(group = "org.springframework.boot", module = "spring-boot-starter-tomcat")
     }
     testImplementation {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
@@ -59,7 +72,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-undertow")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.retry:spring-retry")
 
@@ -72,7 +84,7 @@ dependencies {
 tasks {
     withType<KotlinCompile> {
         compilerOptions {
-            jvmTarget.set(JvmTarget.fromTarget(project.property("versions.java").toString()))
+            jvmTarget.set(JvmTarget.fromTarget(javaVersion))
             javaParameters.set(true)
             freeCompilerArgs.set(
                 listOf(

@@ -1,0 +1,2 @@
+org.springframework.aot.hint.RuntimeHintsRegistrar=\
+com.github.arhor.aws.microservices.playground.expenses.config.ConfigureNativeHints

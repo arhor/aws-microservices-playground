@@ -1,6 +1,6 @@
-### QUESTION 1 (with example answers) - Give me an example of a challenging task you have worked on in the past.
+### QUESTION 1 (example) - Give me an example of a challenging task you have worked on in the past.
 
-**Situation**:
+**Situation**: Describe the situation and when it took place.
 
 ```
 XMPP protocol server hosted in AWS with full mash topology had limited scalability.
@@ -74,3 +74,123 @@ horizontal scaling limit was increased from 100 up to 800-1000 instances.
 **Action**: Provide details about the action you took to attain this.
 
 **Result**: Conclude with the result of your action.
+
+------------------------------------------------------------------------------------------------------------------------
+
+## Custom section
+
+### Case 1 - Tax calculation service refactoring
+
+**Situation**: Describe the situation and when it took place.
+
+```
+Существующий сервис для рассчёта налогов написан с грубыми нарушениями стандартов программирования, сложен в поддержке и
+траблшутинге, отнимает много времени на исправление существующих проблем и введение нового функционала.
+```
+
+**Task**: Explain the task and what was the goal.
+
+```
+Задача: провести рефакторинг существующей кодовой базы, применить допустимые оптимизации без изменения общей семантики
+Цель: упростить работу с сервисом, сократить время необходимое для исправления ошибок/введения фичей
+```
+
+**Action**: Provide details about the action you took to attain this.
+
+```
+Провести функциональную декомпозицию кода, выявить дублирующиеся фрагменты, использовать современный API предоставляемый
+используемой версией Java
+```
+
+**Result**: Conclude with the result of your action.
+
+```
+Работа с сервисом была значительно упрощена - выполнение задач по поддержке сервиса стало возможно для всей команды без
+потери времени, вместо одного ответственного за сервис разработчика, как это было изначально.
+За счёт более тонкой конфигурации встроенного сервера, среднее время обработки запроса сократилось на ~10%, расход 
+памяти, потребляемой сервисом сократился соразмерно
+```
+
+### Case 2 - 'External tax integration' service moved to a separate gradle module
+
+**Situation**: Describe the situation and when it took place.
+
+```
+
+```
+
+**Task**: Explain the task and what was the goal.
+
+```
+
+```
+
+**Action**: Provide details about the action you took to attain this.
+
+```
+
+```
+
+**Result**: Conclude with the result of your action.
+
+```
+
+```
+
+### Case 3 - Creating a custom test framework based on Newman (CLI version of Postman)
+
+**Situation**: Describe the situation and when it took place.
+
+```
+
+```
+
+**Task**: Explain the task and what was the goal.
+
+```
+
+```
+
+**Action**: Provide details about the action you took to attain this.
+
+```
+
+```
+
+**Result**: Conclude with the result of your action.
+
+```
+
+```
+
+### Case 4 - Adapting spring-data-redis to a new service in the POC phase
+
+**Situation**: Describe the situation and when it took place.
+
+```
+
+```
+
+**Task**: Explain the task and what was the goal.
+
+```
+
+```
+
+**Action**: Provide details about the action you took to attain this.
+
+```
+
+```
+
+**Result**: Conclude with the result of your action.
+
+```
+
+```
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+* describe failure
+* describe success

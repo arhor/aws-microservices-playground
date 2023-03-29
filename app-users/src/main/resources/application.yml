@@ -62,5 +62,3 @@ spring:
     import:
       - optional:file:app-users/.env.local[.properties]
       - optional:file:.env.local[.properties]
-  jmx:
-    enabled: true
