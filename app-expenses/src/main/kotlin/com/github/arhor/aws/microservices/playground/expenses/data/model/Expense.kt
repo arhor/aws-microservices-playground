@@ -14,12 +14,12 @@ data class Expense(
     @Column("id")
     val id: Long? = null,
 
-    @Column("user_id")
-    val userId: Long,
+    @Column("date")
+    val date: LocalDate,
 
     @Column("amount")
     val amount: BigDecimal,
 
-    @Column("date")
-    val date: LocalDate,
+    @Column("user_id")
+    val userId: Long,
 )

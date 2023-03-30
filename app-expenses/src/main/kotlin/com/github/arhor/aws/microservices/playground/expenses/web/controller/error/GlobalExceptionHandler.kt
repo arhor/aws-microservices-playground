@@ -1,4 +1,4 @@
-package com.github.arhor.aws.microservices.playground.expenses.controller.error
+package com.github.arhor.aws.microservices.playground.expenses.web.controller.error
 
 import org.slf4j.LoggerFactory
 import org.springframework.context.MessageSource

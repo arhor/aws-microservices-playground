@@ -6,5 +6,14 @@ import org.springframework.boot.context.properties.bind.ConstructorBinding
 @ConfigurationProperties("application-props")
 data class ApplicationProps @ConstructorBinding constructor(
     val apiPathPrefix: String,
-    var retryAttempts: Int,
-)
+    val retryAttempts: Int,
+    val aws: Aws,
+) {
+
+    data class Aws(
+        val url: String? = null,
+        val region: String? = null,
+        val accessKey: String? = null,
+        val secretKey: String? = null,
+    )
+}

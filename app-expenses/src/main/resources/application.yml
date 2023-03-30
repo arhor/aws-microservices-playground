@@ -19,6 +19,11 @@ spring:
     active: ${SPRING_ACTIVE_PROFILES:dev}
   jmx:
     enabled: false
+  jms:
+    listener:
+      acknowledge-mode: CLIENT
+      concurrency: 3
+      max-concurrency: 10
   mvc:
     throw-exception-if-no-handler-found: true
     format:
