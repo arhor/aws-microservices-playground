@@ -8,46 +8,53 @@ import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
 import com.amazonaws.services.sqs.AmazonSQS
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder
-import com.github.arhor.aws.microservices.playground.expenses.config.props.ApplicationProps
-import jakarta.jms.ConnectionFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration(proxyBeanMethods = false)
-class ConfigureAwsIntegration(private val applicationProps: ApplicationProps) {
+class ConfigureAwsIntegration {
+
+    @Value("\${application-props.aws.url}")
+    private lateinit var awsUrl: String
+
+    @Value("\${application-props.aws.region}")
+    private lateinit var awsRegion: String
+
+    @Value("\${application-props.aws.access-key}")
+    private lateinit var awsAccessKey: String
+
+    @Value("\${application-props.aws.secret-key}")
+    private lateinit var awsSecretKey: String
 
     @Bean
-    fun awsCredentialsProvider(): AWSCredentialsProvider {
-        return AWSStaticCredentialsProvider(
+    fun awsCredentialsProvider(): AWSStaticCredentialsProvider =
+        AWSStaticCredentialsProvider(
             BasicAWSCredentials(
-                applicationProps.aws.accessKey,
-                applicationProps.aws.secretKey,
+                awsAccessKey,
+                awsSecretKey,
             )
         )
-    }
 
     @Bean
-    fun endpointConfiguration(): EndpointConfiguration {
-        return EndpointConfiguration(
-            applicationProps.aws.url,
-            applicationProps.aws.region,
+    fun endpointConfiguration(): EndpointConfiguration =
+        EndpointConfiguration(
+            awsUrl,
+            awsRegion,
         )
-    }
 
     @Bean
-    fun amazonSQS(credentials: AWSCredentialsProvider, endpointConfiguration: EndpointConfiguration): AmazonSQS {
-        return AmazonSQSClientBuilder
+    fun amazonSQS(credentials: AWSCredentialsProvider, endpointConfiguration: EndpointConfiguration): AmazonSQS =
+        AmazonSQSClientBuilder
             .standard()
             .withCredentials(credentials)
             .withEndpointConfiguration(endpointConfiguration)
             .build()
-    }
 
     @Bean
-    fun sqsConnectionFactory(amazonSQS: AmazonSQS): ConnectionFactory {
-        return SQSConnectionFactory(
+    fun sqsConnectionFactory(amazonSQS: AmazonSQS): SQSConnectionFactory =
+        SQSConnectionFactory(
             ProviderConfiguration(),
             amazonSQS,
         )
-    }
 }

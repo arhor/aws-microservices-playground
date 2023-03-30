@@ -19,11 +19,6 @@ spring:
     active: ${SPRING_ACTIVE_PROFILES:dev}
   jmx:
     enabled: false
-  jms:
-    listener:
-      acknowledge-mode: CLIENT
-      concurrency: 3
-      max-concurrency: 10
   mvc:
     throw-exception-if-no-handler-found: true
     format:
@@ -57,6 +52,12 @@ spring:
 application-props:
   retry-attempts: 5
   api-path-prefix: /api
+  aws:
+    url: ${AWS_URL}
+    region: ${AWS_REGION}
+    access-key: ${AWS_ACCESS_KEY}
+    secret-key: ${AWS_SECRET_KEY}
+    user-deleted-queue-name: ${AWS_SQS_USER_DELETED_QUEUE_NAME}
 
 ---
 

@@ -83,6 +83,7 @@ dependencies {
     testImplementation("com.ninja-squad:springmockk")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:localstack")
     testImplementation("org.testcontainers:postgresql")
 }
 
