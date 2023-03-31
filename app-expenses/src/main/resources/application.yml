@@ -57,7 +57,7 @@ application-props:
     region: ${AWS_REGION}
     access-key: ${AWS_ACCESS_KEY}
     secret-key: ${AWS_SECRET_KEY}
-    user-deleted-queue-name: ${AWS_SQS_USER_DELETED_QUEUE_NAME}
+    user-deleted-queue-name: ${AWS_QUEUE_NAME}
 
 ---
 
