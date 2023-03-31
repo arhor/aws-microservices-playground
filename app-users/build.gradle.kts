@@ -95,7 +95,33 @@ tasks {
         }
     }
 
-    withType<Test> {
-        useJUnitPlatform()
+    val contractTest by registering(Test::class) {
+        group = "verification"
+        useJUnitPlatform {
+            includeTags("contract")
+        }
+        shouldRunAfter(test)
+    }
+
+    val integrationTest by registering(Test::class) {
+        group = "verification"
+        useJUnitPlatform {
+            includeTags("integration")
+        }
+        shouldRunAfter(contractTest)
+    }
+
+    test {
+        useJUnitPlatform {
+            excludeTags("contract", "integration")
+        }
+    }
+
+    check {
+        dependsOn(
+            test,
+            contractTest,
+            integrationTest,
+        )
     }
 }
