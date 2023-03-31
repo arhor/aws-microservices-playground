@@ -32,7 +32,7 @@ import org.testcontainers.utility.DockerImageName
     ]
 )
 @MockkBean(classes = [ExpenseService::class], relaxUnitFun = true)
-class UserDeletedEventListenerTest {
+internal class UserDeletedEventListenerTest {
 
     @SpykBean
     private lateinit var userDeletedEventListener: UserDeletedEventListener

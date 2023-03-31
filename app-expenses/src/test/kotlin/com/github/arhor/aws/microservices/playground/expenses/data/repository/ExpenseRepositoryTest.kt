@@ -46,6 +46,7 @@ internal class ExpenseRepositoryTest {
             Expense(userId = 2, amount = BigDecimal("22.22"), date = dateTill.plusDays(2)),
             Expense(userId = 3, amount = BigDecimal("33.33"), date = dateTill),
         )
+
         expenseRepository.saveAll(expectedExpenses + incorrectExpenses)
 
         // When
