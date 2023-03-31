@@ -13,4 +13,9 @@ class MainRouter : RouterFunction<ServerResponse> by router({
             .noContent()
             .build()
     }
+    GET(pattern = "health") {
+        ServerResponse
+            .ok()
+            .body("UP")
+    }
 })

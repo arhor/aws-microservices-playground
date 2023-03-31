@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDate
-import java.util.TimeZone
 
 @Validated
 @RestController
@@ -36,7 +35,6 @@ class ExpenseController(
         @RequestParam userId: Long,
         @RequestParam(required = false) dateFrom: LocalDate?,
         @RequestParam(required = false) dateTill: LocalDate?,
-        timeZone: TimeZone
     ): List<ExpenseResultDTO> {
         return expenseService.getUserExpensesWithinDateRange(userId, dateFrom, dateTill)
     }
