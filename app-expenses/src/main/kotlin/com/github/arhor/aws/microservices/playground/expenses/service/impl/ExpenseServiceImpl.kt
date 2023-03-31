@@ -6,10 +6,12 @@ import com.github.arhor.aws.microservices.playground.expenses.service.dto.Expens
 import com.github.arhor.aws.microservices.playground.expenses.service.dto.ExpenseResultDTO
 import com.github.arhor.aws.microservices.playground.expenses.service.dto.ExpenseUpdateDTO
 import com.github.arhor.aws.microservices.playground.expenses.service.mapper.ExpenseMapper
+import org.slf4j.LoggerFactory
 import org.springframework.dao.OptimisticLockingFailureException
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.lang.invoke.MethodHandles
 import java.time.LocalDate
 
 @Service
@@ -17,6 +19,8 @@ class ExpenseServiceImpl(
     private val expenseMapper: ExpenseMapper,
     private val expenseRepository: ExpenseRepository,
 ) : ExpenseService {
+
+    private val logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
 
     override fun getExpenseById(expenseId: Long): ExpenseResultDTO {
         TODO("Not yet implemented")
@@ -41,6 +45,7 @@ class ExpenseServiceImpl(
         maxAttemptsExpression = "\${application-props.retry-attempts}",
     )
     override fun updateExpense(expenseId: Long, dto: ExpenseUpdateDTO): ExpenseResultDTO {
+        // emit event to the queue since budget overrun may be not relevant after expense update
         TODO("Not yet implemented")
     }
 
@@ -51,6 +56,8 @@ class ExpenseServiceImpl(
 
     @Transactional
     override fun deleteUserExpenses(userId: Long) {
-        TODO("Not yet implemented")
+        logger.debug("Deleting expense records with user id: {}", userId)
+        val deletedExpensesNumber = expenseRepository.deleteByUserId(userId)
+        logger.debug("{} expense records deleted with user id: {}", deletedExpensesNumber, userId)
     }
 }

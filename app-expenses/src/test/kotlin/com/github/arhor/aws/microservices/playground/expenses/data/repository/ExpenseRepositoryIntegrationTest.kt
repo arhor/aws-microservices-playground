@@ -69,6 +69,42 @@ internal class ExpenseRepositoryIntegrationTest {
             )
     }
 
+    @Test
+    fun `should delete expenses associated with passed user id and return number deleted rows`() {
+        // Given
+        val userIdToDelete = 1L
+        val userIdToRetain = 2L
+
+        val today = LocalDate.now()
+        val value = BigDecimal("1.00")
+
+        val expensesToDelete = expenseRepository.saveAll((1..10).map {
+            Expense(
+                date = today,
+                amount = value,
+                userId = userIdToDelete,
+            )
+        })
+        val expensesToRetain = expenseRepository.saveAll((1..10).map {
+            Expense(
+                date = today,
+                amount = value,
+                userId = userIdToRetain
+            )
+        })
+
+        // When
+        val deletedRowsNumber = expenseRepository.deleteByUserId(userIdToDelete)
+        val remainingExpenses = expenseRepository.findAll()
+
+        // Then
+        assertThat(deletedRowsNumber)
+            .isEqualTo(expensesToDelete.size)
+
+        assertThat(remainingExpenses)
+            .containsExactlyInAnyOrderElementsOf(expensesToRetain)
+    }
+
     companion object {
         @JvmStatic
         @Container
