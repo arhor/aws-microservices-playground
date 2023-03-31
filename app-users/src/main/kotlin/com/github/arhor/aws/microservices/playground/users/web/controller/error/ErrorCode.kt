@@ -1,4 +1,4 @@
-package com.github.arhor.aws.microservices.playground.users.controller.error
+package com.github.arhor.aws.microservices.playground.users.web.controller.error
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.SerializerProvider

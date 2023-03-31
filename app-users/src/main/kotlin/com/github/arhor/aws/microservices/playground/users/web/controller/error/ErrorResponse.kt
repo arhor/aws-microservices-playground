@@ -1,4 +1,4 @@
-package com.github.arhor.aws.microservices.playground.users.controller.error
+package com.github.arhor.aws.microservices.playground.users.web.controller.error
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonPropertyOrder

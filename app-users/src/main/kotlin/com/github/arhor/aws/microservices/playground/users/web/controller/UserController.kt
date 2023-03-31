@@ -1,4 +1,4 @@
-package com.github.arhor.aws.microservices.playground.users.controller
+package com.github.arhor.aws.microservices.playground.users.web.controller
 
 import com.github.arhor.aws.microservices.playground.users.service.UserService
 import com.github.arhor.aws.microservices.playground.users.service.dto.UserCreateRequestDto

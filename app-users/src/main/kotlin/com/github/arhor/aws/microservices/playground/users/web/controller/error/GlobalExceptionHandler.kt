@@ -1,4 +1,4 @@
-package com.github.arhor.aws.microservices.playground.users.controller.error
+package com.github.arhor.aws.microservices.playground.users.web.controller.error
 
 import com.github.arhor.aws.microservices.playground.users.service.exception.EntityDuplicateException
 import com.github.arhor.aws.microservices.playground.users.service.exception.EntityNotFoundException
