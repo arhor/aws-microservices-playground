@@ -1,63 +1,82 @@
 package com.github.arhor.aws.microservices.playground.expenses.data.repository
 
+import com.github.arhor.aws.microservices.playground.expenses.config.ConfigureAdditionalBeans
+import com.github.arhor.aws.microservices.playground.expenses.config.ConfigureDatabase
 import com.github.arhor.aws.microservices.playground.expenses.data.model.Expense
+import com.github.arhor.aws.microservices.playground.expenses.data.model.projection.BudgetOverrunDetails
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
+import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
+import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.junit.jupiter.Testcontainers
 import java.math.BigDecimal
 import java.time.LocalDate
 
-internal class ExpenseRepositoryTest : RepositoryTestBase() {
+@DataJdbcTest
+@DirtiesContext
+@Testcontainers(disabledWithoutDocker = true)
+@ContextConfiguration(classes = [ConfigureDatabase::class, ConfigureAdditionalBeans::class])
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+internal class ExpenseRepositoryTest {
 
     @Autowired
-    protected lateinit var expenseRepository: ExpenseRepository
+    private lateinit var expenseRepository: ExpenseRepository
 
     @Test
-    fun `should pass`() {
+    fun `should return expected list of budget overruns within the given period without excluded users`() {
         // Given
-        val monday = LocalDate.of(2023, 3, 27)
+        val dateFrom = LocalDate.of(2023, 3, 1)
+        val dateTill = LocalDate.of(2023, 3, 30)
 
-        val expenses = listOf(
-            Expense(
-                userId = 1L,
-                amount = BigDecimal("10.00"),
-                date = monday
-            ),
-            Expense(
-                userId = 1L,
-                amount = BigDecimal("10.00"),
-                date = monday
-            ),
-            Expense(
-                userId = 1L,
-                amount = BigDecimal("10.00"),
-                date = monday
-            ),
-            Expense(
-                userId = 2L,
-                amount = BigDecimal("30.00"),
-                date = monday
-            ),
-            Expense(
-                userId = 3L,
-                amount = BigDecimal("16.00"),
-                date = monday
-            ),
-            Expense(
-                userId = 3L,
-                amount = BigDecimal("16.00"),
-                date = monday
-            ),
+        val expectedExpenses = listOf(
+            Expense(userId = 1, amount = BigDecimal("10.11"), date = dateFrom.plusDays(1)),
+            Expense(userId = 1, amount = BigDecimal("20.22"), date = dateFrom.plusDays(2)),
+            Expense(userId = 2, amount = BigDecimal("15.33"), date = dateFrom.plusDays(3)),
+            Expense(userId = 2, amount = BigDecimal("15.44"), date = dateFrom.plusDays(4)),
         )
+        val incorrectExpenses = listOf(
+            Expense(userId = 1, amount = BigDecimal("11.11"), date = dateTill.plusDays(1)),
+            Expense(userId = 2, amount = BigDecimal("22.22"), date = dateTill.plusDays(2)),
+            Expense(userId = 3, amount = BigDecimal("33.33"), date = dateTill),
+        )
+        expenseRepository.saveAll(expectedExpenses + incorrectExpenses)
 
         // When
-        expenseRepository.saveAll(expenses)
+        val budgetOverrunDetails = expenseRepository
+            .findBudgetOverrunsWithinDateRange(
+                threshold = BigDecimal("30.00"),
+                dateFrom = dateFrom,
+                dateTill = dateTill,
+                skipUserIds = listOf(3),
+            )
+            .use { it.toList() }
 
         // Then
-        expenseRepository.findBudgetOverrunsWithinDateRange(
-            budgetLimit = 29.0.toBigDecimal(),
-            startDate = monday,
-            endDate = monday,
-            userIdsToSkip = emptyList(),
-        ).use { it.forEach(System.out::println) }
+        assertThat(budgetOverrunDetails)
+            .containsExactlyInAnyOrder(
+                BudgetOverrunDetails(userId = 1, amount = "0.33"),
+                BudgetOverrunDetails(userId = 2, amount = "0.77"),
+            )
+    }
+
+    companion object {
+        @JvmStatic
+        @Container
+        private val db = PostgreSQLContainer("postgres:12")
+
+        @JvmStatic
+        @DynamicPropertySource
+        fun registerDynamicProperties(registry: DynamicPropertyRegistry) {
+            registry.add("spring.datasource.url", db::getJdbcUrl)
+            registry.add("spring.datasource.username", db::getUsername)
+            registry.add("spring.datasource.password", db::getPassword)
+        }
     }
 }
