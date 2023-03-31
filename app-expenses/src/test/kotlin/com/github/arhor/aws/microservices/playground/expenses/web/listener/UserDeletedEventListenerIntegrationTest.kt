@@ -7,6 +7,7 @@ import com.ninjasquad.springmockk.MockkBean
 import com.ninjasquad.springmockk.SpykBean
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,6 +23,7 @@ import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import org.testcontainers.utility.DockerImageName
 
+@Tag("integration")
 @ExtendWith(SpringExtension::class)
 @Testcontainers(disabledWithoutDocker = true)
 @ContextConfiguration(
@@ -32,7 +34,7 @@ import org.testcontainers.utility.DockerImageName
     ]
 )
 @MockkBean(classes = [ExpenseService::class], relaxUnitFun = true)
-internal class UserDeletedEventListenerTest {
+internal class UserDeletedEventListenerIntegrationTest {
 
     @SpykBean
     private lateinit var userDeletedEventListener: UserDeletedEventListener

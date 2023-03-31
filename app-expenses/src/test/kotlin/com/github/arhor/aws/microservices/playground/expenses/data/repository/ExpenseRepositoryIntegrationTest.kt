@@ -5,6 +5,7 @@ import com.github.arhor.aws.microservices.playground.expenses.config.ConfigureDa
 import com.github.arhor.aws.microservices.playground.expenses.data.model.Expense
 import com.github.arhor.aws.microservices.playground.expenses.data.model.projection.BudgetOverrunDetails
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest
@@ -19,12 +20,13 @@ import org.testcontainers.junit.jupiter.Testcontainers
 import java.math.BigDecimal
 import java.time.LocalDate
 
+@Tag("integration")
 @DataJdbcTest
 @DirtiesContext
 @Testcontainers(disabledWithoutDocker = true)
 @ContextConfiguration(classes = [ConfigureDatabase::class, ConfigureAdditionalBeans::class])
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-internal class ExpenseRepositoryTest {
+internal class ExpenseRepositoryIntegrationTest {
 
     @Autowired
     private lateinit var expenseRepository: ExpenseRepository
