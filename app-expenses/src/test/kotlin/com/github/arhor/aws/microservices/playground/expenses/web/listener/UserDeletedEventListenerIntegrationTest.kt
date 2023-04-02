@@ -3,6 +3,7 @@ package com.github.arhor.aws.microservices.playground.expenses.web.listener
 import com.github.arhor.aws.microservices.playground.expenses.config.ConfigureAwsIntegration
 import com.github.arhor.aws.microservices.playground.expenses.config.ConfigureMessaging
 import com.github.arhor.aws.microservices.playground.expenses.service.ExpenseService
+import com.github.arhor.aws.microservices.playground.expenses.service.event.UserDeletedEvent
 import com.ninjasquad.springmockk.MockkBean
 import com.ninjasquad.springmockk.SpykBean
 import io.mockk.verify
@@ -34,7 +35,8 @@ import org.testcontainers.utility.DockerImageName
     ]
 )
 @MockkBean(classes = [ExpenseService::class], relaxUnitFun = true)
-internal class UserDeletedEventListenerIntegrationTest {
+internal class
+UserDeletedEventListenerIntegrationTest {
 
     @SpykBean
     private lateinit var userDeletedEventListener: UserDeletedEventListener
