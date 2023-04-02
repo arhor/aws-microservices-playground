@@ -52,7 +52,15 @@ tasks {
         useJUnitPlatform()
     }
 
-    build {
-        finalizedBy(shadowJar)
+    jar {
+        enabled = false
+    }
+
+    shadowJar {
+        archiveClassifier.set(null as String?)
+    }
+
+    assemble {
+        dependsOn(shadowJar)
     }
 }
