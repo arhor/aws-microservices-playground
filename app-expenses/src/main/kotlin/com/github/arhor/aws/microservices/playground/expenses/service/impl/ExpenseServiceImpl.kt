@@ -11,7 +11,6 @@ import org.springframework.dao.OptimisticLockingFailureException
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.lang.invoke.MethodHandles
 import java.time.LocalDate
 
 @Service
@@ -20,7 +19,6 @@ class ExpenseServiceImpl(
     private val expenseRepository: ExpenseRepository,
 ) : ExpenseService {
 
-    private val logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
 
     override fun getExpenseById(expenseId: Long): ExpenseResultDTO {
         TODO("Not yet implemented")
@@ -59,5 +57,9 @@ class ExpenseServiceImpl(
         logger.debug("Deleting expense records with user id: {}", userId)
         val deletedExpensesNumber = expenseRepository.deleteByUserId(userId)
         logger.debug("{} expense records deleted with user id: {}", deletedExpensesNumber, userId)
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(ExpenseServiceImpl::class.java)
     }
 }

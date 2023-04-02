@@ -1,7 +1,7 @@
-package com.github.arhor.aws.microservices.playground.expenses.config
+package com.github.arhor.aws.microservices.playground.users.config
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.github.arhor.aws.microservices.playground.expenses.service.event.UserDeletedEvent
+import com.github.arhor.aws.microservices.playground.users.service.event.UserDeletedEvent
 import jakarta.jms.ConnectionFactory
 import jakarta.jms.Session
 import org.springframework.context.annotation.Bean

@@ -1,4 +1,4 @@
-package com.github.arhor.aws.microservices.playground.expenses.web.listener
+package com.github.arhor.aws.microservices.playground.users.service.event
 
 data class UserDeletedEvent(
     /**

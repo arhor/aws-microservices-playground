@@ -1,6 +1,7 @@
 package com.github.arhor.aws.microservices.playground.expenses.web.listener
 
 import com.github.arhor.aws.microservices.playground.expenses.service.ExpenseService
+import com.github.arhor.aws.microservices.playground.expenses.service.event.UserDeletedEvent
 import org.slf4j.LoggerFactory
 import org.springframework.jms.annotation.JmsListener
 import org.springframework.stereotype.Component

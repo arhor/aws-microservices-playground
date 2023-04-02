@@ -11,4 +11,10 @@ POSTGRES_PASSWORD = <database-password>
 JDBC_DATABASE_URL       = jdbc:postgresql://localhost:${POSTGRES_PORT}/${POSTGRES_DB}
 JDBC_DATABASE_USERNAME  = ${POSTGRES_USER}
 JDBC_DATABASE_PASSWORD  = ${POSTGRES_PASSWORD}
+
+AWS_URL        = <aws-host-name>
+AWS_REGION     = <aws-region>
+AWS_ACCESS_KEY = <aws-access-key>
+AWS_SECRET_KEY = <aws-secret-key>
+AWS_QUEUE_NAME = <aws-sqs-user-delete-events-queue-name>
 ```
