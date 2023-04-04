@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("io.spring.dependency-management")
-    id("org.graalvm.buildtools.native")
     id("org.jetbrains.kotlin.jvm")
     id("org.jetbrains.kotlin.kapt")
     id("org.jetbrains.kotlin.plugin.spring")
@@ -16,19 +15,6 @@ java {
     javaVersion.let(JavaVersion::toVersion).let {
         sourceCompatibility = it
         targetCompatibility = it
-    }
-}
-
-graalvmNative {
-    binaries {
-        named("main") {
-            javaLauncher.set(
-                javaToolchains.launcherFor {
-                    languageVersion.set(JavaLanguageVersion.of(javaVersion))
-                    vendor.set(JvmVendorSpec.matching("GraalVM Community"))
-                }
-            )
-        }
     }
 }
 

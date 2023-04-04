@@ -1,6 +1,5 @@
 package com.github.arhor.aws.microservices.playground.expenses.data.repository
 
-import com.github.arhor.aws.microservices.playground.expenses.config.ConfigureAdditionalBeans
 import com.github.arhor.aws.microservices.playground.expenses.config.ConfigureDatabase
 import com.github.arhor.aws.microservices.playground.expenses.data.model.Expense
 import com.github.arhor.aws.microservices.playground.expenses.data.model.projection.BudgetOverrunDetails
@@ -24,7 +23,7 @@ import java.time.LocalDate
 @DataJdbcTest
 @DirtiesContext
 @Testcontainers(disabledWithoutDocker = true)
-@ContextConfiguration(classes = [ConfigureDatabase::class, ConfigureAdditionalBeans::class])
+@ContextConfiguration(classes = [ConfigureDatabase::class])
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 internal class ExpenseRepositoryIntegrationTest {
 
