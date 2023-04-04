@@ -9,7 +9,7 @@ services:
     tmpfs:
       - "/var/lib/postgresql/data"
     env_file:
-      - "app-expenses/.env.local"
+      - "app-expenses/.env.dev"
 
   users-service-db:
     container_name: users-service-db
@@ -19,4 +19,14 @@ services:
     tmpfs:
       - "/var/lib/postgresql/data"
     env_file:
-      - "app-users/.env.local"
+      - "app-users/.env.dev"
+
+  localstack:
+    container_name: localstack
+    image: localstack/localstack:1.4.0
+    ports:
+      - "4566:4566"
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./scripts/localstack:/docker-entrypoint-initaws.d/"

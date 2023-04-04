@@ -1,4 +1,4 @@
-Creating `.env.local` file inside service directory is necessary for the local deployment.
+Creating `.env.dev` file inside service directory is necessary for the local deployment.
 
 Content of the file for the current service should be the following (with `<placeholders>` replaced):
 

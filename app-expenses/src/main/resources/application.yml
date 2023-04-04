@@ -66,5 +66,5 @@ spring:
     activate:
       on-profile: dev
     import:
-      - optional:file:app-expenses[/.env.local[.properties]
-      - optional:file:.env.local[.properties]
+      - optional:file:./.env.dev[.properties]
+      - optional:file:./app-expenses/.env.dev[.properties]
