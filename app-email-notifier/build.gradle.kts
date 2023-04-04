@@ -19,10 +19,18 @@ dependencies {
     annotationProcessor("com.google.dagger:dagger-compiler")
 
     implementation(platform(rootProject))
+    implementation("com.amazonaws:aws-java-sdk-ses")
     implementation("com.amazonaws:aws-java-sdk-sqs")
     implementation("com.amazonaws:aws-lambda-java-core")
     implementation("com.amazonaws:aws-lambda-java-events")
+    implementation("org.apache.commons:commons-text")
     implementation("com.google.dagger:dagger")
+
+    implementation("org.apache.logging.log4j:log4j-api")
+    implementation("org.apache.logging.log4j:log4j-core")
+    implementation("org.apache.logging.log4j:log4j-slf4j2-impl")
+
+    runtimeOnly("com.amazonaws:aws-lambda-java-log4j2")
 
     testImplementation("com.amazonaws:aws-lambda-java-tests")
     testImplementation("org.assertj:assertj-core")

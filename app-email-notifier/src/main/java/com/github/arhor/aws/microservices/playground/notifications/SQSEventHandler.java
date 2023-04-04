@@ -4,13 +4,18 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SQSBatchResponse;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 
 @SuppressWarnings("unused")
 public class SQSEventHandler implements RequestHandler<SQSEvent, SQSBatchResponse> {
 
-    final SQSMessageProcessorService sqsMessageProcessorService;
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    private final SQSMessageProcessorService sqsMessageProcessorService;
 
     public SQSEventHandler() {
         this(DaggerServiceFactory.create().sqsMessageProcessorService());
@@ -22,7 +27,6 @@ public class SQSEventHandler implements RequestHandler<SQSEvent, SQSBatchRespons
 
     @Override
     public SQSBatchResponse handleRequest(final SQSEvent event, final Context context) {
-        final var logger = context.getLogger();
         final var errors = new ArrayList<SQSBatchResponse.BatchItemFailure>();
 
         for (final var message : event.getRecords()) {
@@ -30,12 +34,7 @@ public class SQSEventHandler implements RequestHandler<SQSEvent, SQSBatchRespons
                 sqsMessageProcessorService.process(message);
             } catch (final Exception exception) {
                 final var messageId = message.getMessageId();
-                logger.log(
-                    "[ERROR] An error occurred processing SQS message with id: %s - %s".formatted(
-                        messageId,
-                        exception
-                    )
-                );
+                logger.error("An error occurred processing SQS message with id: {}", messageId, exception);
                 errors.add(new SQSBatchResponse.BatchItemFailure(messageId));
             }
         }
