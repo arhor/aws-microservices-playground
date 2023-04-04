@@ -85,33 +85,33 @@ tasks {
         }
     }
 
-    val contractTest by registering(Test::class) {
-        group = "verification"
+    val `contract-test` by registering(Test::class) {
+        group = GradleTaskGroups.VERIFICATION
         useJUnitPlatform {
-            includeTags("contract")
+            includeTags(TestTags.CONTRACT)
         }
         shouldRunAfter(test)
     }
 
-    val integrationTest by registering(Test::class) {
-        group = "verification"
+    val `integration-test` by registering(Test::class) {
+        group = GradleTaskGroups.VERIFICATION
         useJUnitPlatform {
-            includeTags("integration")
+            includeTags(TestTags.INTEGRATION)
         }
-        shouldRunAfter(contractTest)
+        shouldRunAfter(`contract-test`)
     }
 
     test {
         useJUnitPlatform {
-            excludeTags("contract", "integration")
+            excludeTags(TestTags.CONTRACT, TestTags.INTEGRATION)
         }
     }
 
     check {
         dependsOn(
             test,
-            contractTest,
-            integrationTest,
+            `contract-test`,
+            `integration-test`,
         )
     }
 }

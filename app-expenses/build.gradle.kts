@@ -74,15 +74,6 @@ dependencies {
     testImplementation("org.testcontainers:postgresql")
 }
 
-object GradleTaskGroups {
-    const val VERIFICATION = "verification"
-}
-
-object TestTags {
-    const val CONTRACT = "contract"
-    const val INTEGRATION = "integration"
-}
-
 tasks {
     withType<KotlinCompile> {
         compilerOptions {
@@ -97,7 +88,7 @@ tasks {
         }
     }
 
-    val contractTest by registering(Test::class) {
+    val `contract-test` by registering(Test::class) {
         group = GradleTaskGroups.VERIFICATION
         useJUnitPlatform {
             includeTags(TestTags.CONTRACT)
@@ -105,12 +96,12 @@ tasks {
         shouldRunAfter(test)
     }
 
-    val integrationTest by registering(Test::class) {
+    val `integration-test` by registering(Test::class) {
         group = GradleTaskGroups.VERIFICATION
         useJUnitPlatform {
             includeTags(TestTags.INTEGRATION)
         }
-        shouldRunAfter(contractTest)
+        shouldRunAfter(`contract-test`)
     }
 
     test {
@@ -122,8 +113,8 @@ tasks {
     check {
         dependsOn(
             test,
-            contractTest,
-            integrationTest,
+            `contract-test`,
+            `integration-test`,
         )
     }
 }
