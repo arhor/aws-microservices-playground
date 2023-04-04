@@ -74,6 +74,10 @@ dependencies {
     testImplementation("org.testcontainers:postgresql")
 }
 
+object GradleTaskGroups {
+    const val VERIFICATION = "verification"
+}
+
 object TestTags {
     const val CONTRACT = "contract"
     const val INTEGRATION = "integration"
@@ -94,7 +98,7 @@ tasks {
     }
 
     val contractTest by registering(Test::class) {
-        group = "verification"
+        group = GradleTaskGroups.VERIFICATION
         useJUnitPlatform {
             includeTags(TestTags.CONTRACT)
         }
@@ -102,7 +106,7 @@ tasks {
     }
 
     val integrationTest by registering(Test::class) {
-        group = "verification"
+        group = GradleTaskGroups.VERIFICATION
         useJUnitPlatform {
             includeTags(TestTags.INTEGRATION)
         }
