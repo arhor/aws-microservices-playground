@@ -6,11 +6,19 @@ on:
       - 'master'
     paths:
       - 'app-email-notifier/**'
+      - 'buildSrc/**'
+      - 'build.gradle*'
+      - 'gradle.properties'
+      - 'settings.gradle*'
   pull_request:
     branches:
       - 'master'
     paths:
       - 'app-email-notifier/**'
+      - 'buildSrc/**'
+      - 'build.gradle*'
+      - 'gradle.properties'
+      - 'settings.gradle*'
 
 jobs:
   build:
