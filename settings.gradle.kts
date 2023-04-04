@@ -3,6 +3,7 @@ pluginManagement {
         fun prop(name: String): String = extra[name].toString()
 
         // @formatter:off
+        id("com.adarshr.test-logger")            version prop("versions.gradle-test-logger")
         id("com.github.johnrengelman.shadow")    version prop("versions.gradle-shadow-plugin")
         id("io.spring.dependency-management")    version prop("versions.spring-dependency-management")
         id("org.jetbrains.kotlin.jvm")           version prop("versions.kotlin")

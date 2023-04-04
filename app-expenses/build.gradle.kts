@@ -3,10 +3,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("io.spring.dependency-management")
+    id("org.springframework.boot")
+    id("com.adarshr.test-logger")
     id("org.jetbrains.kotlin.jvm")
     id("org.jetbrains.kotlin.kapt")
     id("org.jetbrains.kotlin.plugin.spring")
-    id("org.springframework.boot")
 }
 
 val javaVersion = project.property("versions.java")!!.toString()
