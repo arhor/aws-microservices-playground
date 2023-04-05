@@ -13,6 +13,13 @@ public class StringInterpolator {
     public StringInterpolator() {}
 
     public String interpolate(final String template, final Map<String, String> mappings) {
-        return StringSubstitutor.replace(template, mappings);
+        return createSubstitutor(mappings).replace(template);
+    }
+
+    private StringSubstitutor createSubstitutor(final Map<String, String> mappings) {
+
+        return new StringSubstitutor(mappings)
+            .setEnableUndefinedVariableException(true)
+            .setDisableSubstitutionInValues(true);
     }
 }
