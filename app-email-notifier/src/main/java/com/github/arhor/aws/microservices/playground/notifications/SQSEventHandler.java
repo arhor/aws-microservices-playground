@@ -30,11 +30,13 @@ public class SQSEventHandler implements RequestHandler<SQSEvent, SQSBatchRespons
         final var errors = new ArrayList<SQSBatchResponse.BatchItemFailure>();
 
         for (final var message : event.getRecords()) {
+            final var messageId = message.getMessageId();
+            logger.debug("Processing of the SQS message with id = [{}] - START", messageId);
             try {
                 sqsMessageProcessorService.process(message);
-            } catch (final Exception exception) {
-                final var messageId = message.getMessageId();
-                logger.error("An error occurred processing SQS message with id: {}", messageId, exception);
+                logger.debug("Processing of the SQS message with id = [{}] - SUCCESS", messageId);
+            } catch (final Exception e) {
+                logger.error("Processing of the SQS message with id = [{}] - FAILURE", messageId, e);
                 errors.add(new SQSBatchResponse.BatchItemFailure(messageId));
             }
         }

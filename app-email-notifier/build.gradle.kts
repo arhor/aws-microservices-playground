@@ -32,7 +32,6 @@ dependencies {
 
     runtimeOnly("com.amazonaws:aws-lambda-java-log4j2")
 
-    testImplementation("com.amazonaws:aws-lambda-java-tests")
     testImplementation("org.assertj:assertj-core")
     testImplementation("org.mockito:mockito-core")
     testImplementation("org.mockito:mockito-junit-jupiter")
