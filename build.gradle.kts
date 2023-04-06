@@ -33,6 +33,7 @@ dependencies {
         api("org.mockito:mockito-core:${property("versions.mockito")}")
         api("org.mockito:mockito-junit-jupiter:${property("versions.mockito")}")
         api("org.postgresql:postgresql:${property("versions.postgresql")}")
+        api("org.projectlombok:lombok:${property("versions.lombok")}")
     }
 }
 

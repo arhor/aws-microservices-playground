@@ -1,7 +1,8 @@
-package com.github.arhor.aws.microservices.playground.overruns;
+package com.github.arhor.aws.microservices.playground.overruns.config;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,7 +14,7 @@ import javax.inject.Singleton;
 import java.net.http.HttpClient;
 
 @Module
-public interface ServiceModule {
+public interface Module_Provider {
 
     @Provides
     @Singleton
@@ -29,8 +30,14 @@ public interface ServiceModule {
 
     @Provides
     @Singleton
-    static AmazonDynamoDB AmazonDynamoDB() {
+    static AmazonDynamoDB amazonDynamoDB() {
         return AmazonDynamoDBClientBuilder.defaultClient();
+    }
+
+    @Provides
+    @Singleton
+    static DynamoDBMapper dynamoDBMapper(final AmazonDynamoDB dynamoDBClient) {
+        return new DynamoDBMapper(dynamoDBClient);
     }
 
     @Provides

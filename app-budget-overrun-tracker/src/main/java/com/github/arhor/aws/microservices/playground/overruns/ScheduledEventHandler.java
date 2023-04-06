@@ -3,6 +3,8 @@ package com.github.arhor.aws.microservices.playground.overruns;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.ScheduledEvent;
+import com.github.arhor.aws.microservices.playground.overruns.config.DaggerServiceFactory;
+import com.github.arhor.aws.microservices.playground.overruns.service.BudgetOverrunTrackerService;
 
 @SuppressWarnings("unused")
 public class ScheduledEventHandler implements RequestHandler<ScheduledEvent, Void> {

@@ -8,8 +8,8 @@ import javax.inject.Singleton;
 @Singleton
 @Component(
     modules = {
-        Module_Provider.class,
         Module_Bindings.class,
+        Module_Provider.class,
     }
 )
 public interface ServiceFactory {

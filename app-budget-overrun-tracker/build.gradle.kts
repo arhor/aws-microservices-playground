@@ -16,15 +16,22 @@ repositories {
 
 dependencies {
     annotationProcessor(platform(rootProject))
+    annotationProcessor("org.projectlombok:lombok")
     annotationProcessor("com.google.dagger:dagger-compiler")
 
+    compileOnly("org.projectlombok:lombok")
+
+    runtimeOnly("com.amazonaws:aws-lambda-java-log4j2")
+
     implementation(platform(rootProject))
-    implementation(platform("com.amazonaws:aws-java-sdk-bom"))
     implementation("com.amazonaws:aws-java-sdk-dynamodb")
     implementation("com.amazonaws:aws-java-sdk-sns")
     implementation("com.amazonaws:aws-lambda-java-core")
     implementation("com.amazonaws:aws-lambda-java-events")
     implementation("com.google.dagger:dagger")
+    implementation("org.apache.logging.log4j:log4j-api")
+    implementation("org.apache.logging.log4j:log4j-core")
+    implementation("org.apache.logging.log4j:log4j-slf4j2-impl")
 
     testImplementation("org.assertj:assertj-core")
     testImplementation("org.mockito:mockito-core")

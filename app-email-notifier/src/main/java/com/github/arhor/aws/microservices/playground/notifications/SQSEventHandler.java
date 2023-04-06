@@ -6,16 +6,13 @@ import com.amazonaws.services.lambda.runtime.events.SQSBatchResponse;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import com.github.arhor.aws.microservices.playground.notifications.config.DaggerServiceFactory;
 import com.github.arhor.aws.microservices.playground.notifications.service.SQSMessageProcessorService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
-import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 
+@Slf4j
 @SuppressWarnings("unused")
 public class SQSEventHandler implements RequestHandler<SQSEvent, SQSBatchResponse> {
-
-    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final SQSMessageProcessorService sqsMessageProcessorService;
 
@@ -33,12 +30,12 @@ public class SQSEventHandler implements RequestHandler<SQSEvent, SQSBatchRespons
 
         for (final var message : event.getRecords()) {
             final var messageId = message.getMessageId();
-            logger.debug("Processing of the SQS message with id = [{}] - START", messageId);
+            log.debug("Processing of the SQS message with id = [{}] - START", messageId);
             try {
                 sqsMessageProcessorService.process(message);
-                logger.debug("Processing of the SQS message with id = [{}] - SUCCESS", messageId);
+                log.debug("Processing of the SQS message with id = [{}] - SUCCESS", messageId);
             } catch (final Exception e) {
-                logger.error("Processing of the SQS message with id = [{}] - FAILURE", messageId, e);
+                log.error("Processing of the SQS message with id = [{}] - FAILURE", messageId, e);
                 errors.add(new SQSBatchResponse.BatchItemFailure(messageId));
             }
         }
