@@ -1,4 +1,4 @@
-package com.github.arhor.aws.microservices.playground.notifications;
+package com.github.arhor.aws.microservices.playground.notifications.config;
 
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
@@ -10,8 +10,11 @@ import dagger.Provides;
 import javax.inject.Singleton;
 import java.net.http.HttpClient;
 
+/**
+ * Declares provider methods, which return instantiated and preconfigured objects.
+ */
 @Module
-public interface ServiceModule {
+interface Module_Provider {
 
     @Provides
     @Singleton

@@ -4,6 +4,8 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SQSBatchResponse;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
+import com.github.arhor.aws.microservices.playground.notifications.config.DaggerServiceFactory;
+import com.github.arhor.aws.microservices.playground.notifications.service.SQSMessageProcessorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

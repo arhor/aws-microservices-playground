@@ -1,4 +1,5 @@
 plugins {
+    id("com.adarshr.test-logger")
     id("com.github.johnrengelman.shadow")
     id("java")
 }

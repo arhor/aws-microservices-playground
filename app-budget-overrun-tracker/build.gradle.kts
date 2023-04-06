@@ -26,7 +26,6 @@ dependencies {
     implementation("com.amazonaws:aws-lambda-java-events")
     implementation("com.google.dagger:dagger")
 
-    testImplementation("com.amazonaws:aws-lambda-java-tests")
     testImplementation("org.assertj:assertj-core")
     testImplementation("org.mockito:mockito-core")
     testImplementation("org.mockito:mockito-junit-jupiter")

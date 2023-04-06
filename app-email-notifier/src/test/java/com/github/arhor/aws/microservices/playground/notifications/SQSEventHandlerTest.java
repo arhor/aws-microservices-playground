@@ -3,6 +3,7 @@ package com.github.arhor.aws.microservices.playground.notifications;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.events.SQSBatchResponse;
 import com.amazonaws.services.lambda.runtime.events.SQSBatchResponse.BatchItemFailure;
+import com.github.arhor.aws.microservices.playground.notifications.service.SQSMessageProcessorService;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

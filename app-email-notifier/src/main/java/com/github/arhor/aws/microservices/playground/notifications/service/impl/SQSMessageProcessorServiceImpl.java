@@ -1,7 +1,11 @@
-package com.github.arhor.aws.microservices.playground.notifications;
+package com.github.arhor.aws.microservices.playground.notifications.service.impl;
 
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.arhor.aws.microservices.playground.notifications.model.Notification;
+import com.github.arhor.aws.microservices.playground.notifications.service.SQSMessageProcessorService;
+import com.github.arhor.aws.microservices.playground.notifications.service.UserEmailSender;
+import com.github.arhor.aws.microservices.playground.notifications.service.UsersApiClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +15,7 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
 @Singleton
-public class SQSMessageProcessorService {
+public class SQSMessageProcessorServiceImpl implements SQSMessageProcessorService {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -20,7 +24,7 @@ public class SQSMessageProcessorService {
     private final UserEmailSender userEmailSender;
 
     @Inject
-    public SQSMessageProcessorService(
+    public SQSMessageProcessorServiceImpl(
         final ObjectMapper objectMapper,
         final UsersApiClient usersApiClient,
         final UserEmailSender userEmailSender
@@ -30,6 +34,7 @@ public class SQSMessageProcessorService {
         this.userEmailSender = userEmailSender;
     }
 
+    @Override
     public void process(final SQSEvent.SQSMessage message) throws IOException, InterruptedException {
         final var notification = objectMapper.readValue(message.getBody(), Notification.class);
         logger.debug("Deserialized message content: {}", notification);

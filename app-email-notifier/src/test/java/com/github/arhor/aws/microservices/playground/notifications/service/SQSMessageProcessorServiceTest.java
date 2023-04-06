@@ -1,6 +1,9 @@
-package com.github.arhor.aws.microservices.playground.notifications;
+package com.github.arhor.aws.microservices.playground.notifications.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.arhor.aws.microservices.playground.notifications.model.Notification;
+import com.github.arhor.aws.microservices.playground.notifications.model.User;
+import com.github.arhor.aws.microservices.playground.notifications.service.impl.SQSMessageProcessorServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 
@@ -17,7 +20,7 @@ class SQSMessageProcessorServiceTest {
     private final UsersApiClient usersApiClient = mock(UsersApiClient.class);
     private final UserEmailSender userEmailSender = mock(UserEmailSender.class);
 
-    private final SQSMessageProcessorService sqsMessageProcessorService = new SQSMessageProcessorService(
+    private final SQSMessageProcessorService sqsMessageProcessorService = new SQSMessageProcessorServiceImpl(
         objectMapper,
         usersApiClient,
         userEmailSender

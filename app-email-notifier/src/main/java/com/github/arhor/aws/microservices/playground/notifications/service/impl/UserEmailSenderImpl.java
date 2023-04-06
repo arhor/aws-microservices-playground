@@ -1,7 +1,13 @@
-package com.github.arhor.aws.microservices.playground.notifications;
+package com.github.arhor.aws.microservices.playground.notifications.service.impl;
 
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
-import com.amazonaws.services.simpleemail.model.*;
+import com.amazonaws.services.simpleemail.model.Body;
+import com.amazonaws.services.simpleemail.model.Content;
+import com.amazonaws.services.simpleemail.model.Destination;
+import com.amazonaws.services.simpleemail.model.Message;
+import com.amazonaws.services.simpleemail.model.SendEmailRequest;
+import com.github.arhor.aws.microservices.playground.notifications.service.StringInterpolator;
+import com.github.arhor.aws.microservices.playground.notifications.service.UserEmailSender;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -9,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @Singleton
-public class UserEmailSender {
+public class UserEmailSenderImpl implements UserEmailSender {
 
     private static final String SES_SENDER_EMAIL_ADDRESS = System.getenv("SES_SENDER_EMAIL_ADDRESS");
 
@@ -44,7 +50,7 @@ public class UserEmailSender {
     private final StringInterpolator interpolator;
 
     @Inject
-    public UserEmailSender(
+    public UserEmailSenderImpl(
         final AmazonSimpleEmailService amazonSimpleEmailService,
         final StringInterpolator interpolator
     ) {
@@ -52,6 +58,7 @@ public class UserEmailSender {
         this.interpolator = interpolator;
     }
 
+    @Override
     public void sendOverrunNotification(final String email, final String limit, final String value) {
         final var mappings = Map.of(
             ARG_LIMIT, limit,

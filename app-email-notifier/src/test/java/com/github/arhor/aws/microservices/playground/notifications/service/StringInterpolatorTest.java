@@ -1,5 +1,6 @@
-package com.github.arhor.aws.microservices.playground.notifications;
+package com.github.arhor.aws.microservices.playground.notifications.service;
 
+import com.github.arhor.aws.microservices.playground.notifications.service.impl.StringInterpolatorImpl;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class StringInterpolatorTest {
 
-    private final StringInterpolator stringInterpolator = new StringInterpolator();
+    private final StringInterpolator stringInterpolator = new StringInterpolatorImpl();
 
     @Test
     void should_inject_expected_value_into_template_string() {
