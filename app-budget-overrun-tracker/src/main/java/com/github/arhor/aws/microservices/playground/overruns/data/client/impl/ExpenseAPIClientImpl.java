@@ -1,7 +1,6 @@
 package com.github.arhor.aws.microservices.playground.overruns.data.client.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.arhor.aws.microservices.playground.overruns.data.client.ExpenseAPIClient;
 import com.github.arhor.aws.microservices.playground.overruns.data.model.BudgetOverrunDetails;
 import lombok.SneakyThrows;
@@ -16,6 +15,7 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import static java.time.temporal.TemporalAdjusters.firstDayOfMonth;
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
@@ -38,21 +38,22 @@ public class ExpenseAPIClientImpl implements ExpenseAPIClient {
     private static final TypeReference<List<BudgetOverrunDetails>> BUDGETS_TYPE_REF = new TypeReference<>() {};
 
     private final HttpClient httpClient;
-    private final ObjectMapper objectMapper;
+    private final JsonStreamParser streamParser;
 
     @Inject
-    private ExpenseAPIClientImpl(
+    public ExpenseAPIClientImpl(
         final HttpClient httpClient,
-        final ObjectMapper objectMapper
+        final JsonStreamParser streamParser
     ) {
         this.httpClient = httpClient;
-        this.objectMapper = objectMapper;
+        this.streamParser = streamParser;
     }
 
     @Override
     @SneakyThrows
-    public List<BudgetOverrunDetails> findBudgetOverrunDetailsInCurrentMonth(
-        final List<? extends Long> userIdsToExclude
+    public void findBudgetOverrunDetailsInCurrentMonth(
+        final List<? extends String> userIdsToExclude,
+        final Consumer<BudgetOverrunDetails> consumer
     ) {
         final var currentDate = LocalDate.now();
         final var monthStart = currentDate.with(firstDayOfMonth()).toString();
@@ -73,7 +74,13 @@ public class ExpenseAPIClientImpl implements ExpenseAPIClient {
 
         final var response = httpClient.send(request, BodyHandlers.ofInputStream());
 
-        return objectMapper.readValue(response.body(), BUDGETS_TYPE_REF);
+        streamParser.parse(
+            new JsonStreamDescriptor<>(
+                response.body(),
+                BudgetOverrunDetails.class,
+                consumer
+            )
+        );
     }
 
     private String convertToCommaSeparatedString(final List<?> values) {

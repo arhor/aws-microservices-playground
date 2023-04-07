@@ -26,8 +26,8 @@ public class SQSMessageProcessorServiceImpl implements SQSMessageProcessorServic
         final UsersApiClient usersApiClient,
         final UserEmailSender userEmailSender
     ) {
-        this.usersApiClient = usersApiClient;
         this.objectMapper = objectMapper;
+        this.usersApiClient = usersApiClient;
         this.userEmailSender = userEmailSender;
     }
 

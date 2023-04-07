@@ -15,12 +15,11 @@ public class StringInterpolatorImpl implements StringInterpolator {
 
     @Override
     public String interpolate(final String template, final Map<String, String> mappings) {
-        return createSubstitutor(mappings).replace(template);
-    }
+        final var substitutor =
+            new StringSubstitutor(mappings)
+                .setEnableUndefinedVariableException(true)
+                .setDisableSubstitutionInValues(true);
 
-    private StringSubstitutor createSubstitutor(final Map<String, String> mappings) {
-        return new StringSubstitutor(mappings)
-            .setEnableUndefinedVariableException(true)
-            .setDisableSubstitutionInValues(true);
+        return substitutor.replace(template);
     }
 }

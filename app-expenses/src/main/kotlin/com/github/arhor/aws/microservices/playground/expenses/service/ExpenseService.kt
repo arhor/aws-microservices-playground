@@ -4,10 +4,11 @@ import com.github.arhor.aws.microservices.playground.expenses.service.dto.Expens
 import com.github.arhor.aws.microservices.playground.expenses.service.dto.ExpenseResultDTO
 import com.github.arhor.aws.microservices.playground.expenses.service.dto.ExpenseUpdateDTO
 import java.time.LocalDate
+import java.util.stream.Stream
 
 interface ExpenseService {
     fun getExpenseById(expenseId: Long): ExpenseResultDTO
-    fun getUserExpensesWithinDateRange(userId: Long, dateFrom: LocalDate?, dateTill: LocalDate?): List<ExpenseResultDTO>
+    fun getExpenses(skipUids: List<Long>?, dateFrom: LocalDate?, dateTill: LocalDate?): Stream<ExpenseResultDTO>
     fun createExpense(dto: ExpenseCreateDTO): ExpenseResultDTO
     fun updateExpense(expenseId: Long, dto: ExpenseUpdateDTO): ExpenseResultDTO
     fun deleteExpenseById(expenseId: Long)

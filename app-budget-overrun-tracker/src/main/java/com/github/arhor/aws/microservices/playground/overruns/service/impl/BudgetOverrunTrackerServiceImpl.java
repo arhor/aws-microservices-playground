@@ -14,6 +14,7 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Map;
 
 @Slf4j
@@ -48,6 +49,14 @@ public class BudgetOverrunTrackerServiceImpl implements BudgetOverrunTrackerServ
         // 3. ask expenses service to find users with budget overruns in the current month (excluding users from step 2)
         // 4. publish notification to the SNS
         // 5. save users from the step 3 to the database
+
+        var processed = new ArrayList<String>();
+        try {
+            // do process
+            processed.add("proceesed user id");
+        } finally {
+            // update DB with processed ids
+        }
 
         amazonDynamoDB.deleteItem(
             new DeleteItemRequest()

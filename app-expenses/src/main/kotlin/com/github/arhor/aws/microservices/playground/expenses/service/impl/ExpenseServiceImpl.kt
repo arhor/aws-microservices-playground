@@ -12,6 +12,7 @@ import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
+import java.util.stream.Stream
 
 @Service
 class ExpenseServiceImpl(
@@ -24,12 +25,17 @@ class ExpenseServiceImpl(
         TODO("Not yet implemented")
     }
 
-    override fun getUserExpensesWithinDateRange(
-        userId: Long,
+    // @Transactional causes Could not write JSON: This ResultSet is closed.
+    override fun getExpenses(
+        skipUids: List<Long>?,
         dateFrom: LocalDate?,
         dateTill: LocalDate?
-    ): List<ExpenseResultDTO> {
-        TODO("Not yet implemented")
+    ): Stream<ExpenseResultDTO> {
+
+        return expenseRepository
+            .findAllWithinDateRangeSkippingUserIds(skipUids ?: emptyList(), dateFrom, dateTill)
+            .peek { throw RuntimeException("BOOM!!!") }
+            .map(expenseMapper::mapExpenseToResultDto)
     }
 
     @Transactional

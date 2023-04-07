@@ -19,6 +19,13 @@ interface ExpenseRepository : ListCrudRepository<Expense, Long> {
         skipUserIds: List<Long>,
     ): Stream<BudgetOverrunDetails>
 
+    @Query(name = "Expense.findAllWithinDateRangeSkippingUserIds")
+    fun findAllWithinDateRangeSkippingUserIds(
+        skipUids: List<Long>,
+        dateFrom: LocalDate?,
+        dateTill: LocalDate?
+    ): Stream<Expense>
+
     @Modifying
     @Query(name = "Expense.deleteByUserId")
     fun deleteByUserId(userId: Long): Int
