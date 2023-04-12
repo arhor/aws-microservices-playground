@@ -1,14 +1,16 @@
 package com.github.arhor.aws.microservices.playground.overruns.data.client.impl;
 
-import java.util.Objects;
+import lombok.NonNull;
+import lombok.Value;
+
 import java.util.function.Consumer;
 
-public record TypedConsumer<T>(Class<T> type, Consumer<T> delegate) implements Consumer<T> {
+@Value
+@SuppressWarnings("NullableProblems")
+public class TypedConsumer<T> implements Consumer<T> {
 
-    public TypedConsumer {
-        Objects.requireNonNull(type, "'type' cannot be null");
-        Objects.requireNonNull(delegate, "'delegate' cannot be null");
-    }
+    @NonNull Class<T> type;
+    @NonNull Consumer<T> delegate;
 
     @Override
     public void accept(final T value) {

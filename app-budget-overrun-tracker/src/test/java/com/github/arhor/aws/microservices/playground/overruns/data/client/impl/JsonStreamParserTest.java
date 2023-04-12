@@ -2,54 +2,68 @@ package com.github.arhor.aws.microservices.playground.overruns.data.client.impl;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+import static java.util.stream.Collectors.toList;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.spy;
 
+@Slf4j
 class JsonStreamParserTest {
 
-    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class Element {
+        private String name;
+        private List<String> data;
+    }
 
-    private record Element(String name, List<String> data) {}
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class Attachment {
+        private int code;
+        private Map<String, String> params;
+    }
 
-    private record Attachment(int code, Map<String, String> params) {}
-
-    private static final String JSON = """
-        [
-            {
-                "name": "test-object-1",
-                "data": ["line-1"]
-            },
-            {
-                "name": "test-object-2",
-                "data": ["line-2"]
-            },
-            {
-                "name": "test-object-3",
-                "data": ["line-3"]
-            }
-        ]{
-             "code": 12345,
-             "params": {
-                 "param-1": "value-1",
-                 "param-2": "value-2"
-             }
-         }
-        """;
+    private static final String JSON = new StringJoiner("\n")
+        .add("[")
+        .add("    {")
+        .add("        \"name\": \"test-object-1\",")
+        .add("        \"data\": [\"line-1\"]")
+        .add("    },")
+        .add("    {")
+        .add("        \"name\": \"test-object-2\",")
+        .add("        \"data\": [\"line-2\"]")
+        .add("    },")
+        .add("    {")
+        .add("        \"name\": \"test-object-3\",")
+        .add("        \"data\": [\"line-3\"]")
+        .add("    }")
+        .add("]{")
+        .add("     \"code\": 12345,")
+        .add("     \"params\": {")
+        .add("         \"param-1\": \"value-1\",")
+        .add("         \"param-2\": \"value-2\"")
+        .add("     }")
+        .add("}")
+        .toString();
 
     private final JsonStreamParser streamParser = new JsonStreamParser(
         JsonMapper.builder()
@@ -79,7 +93,7 @@ class JsonStreamParserTest {
 
         // When
         CompletableFuture.delayedExecutor(3, TimeUnit.SECONDS).execute(() -> {
-            final var lines = JSON.lines().toList();
+            final var lines = JSON.lines().collect(toList());
 
             for (int i = 0, size = lines.size(); i < size; i++) {
                 writeLineToStream(lines.get(i), outputStream);

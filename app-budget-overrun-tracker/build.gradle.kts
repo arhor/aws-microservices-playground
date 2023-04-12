@@ -5,8 +5,8 @@ plugins {
 
 java {
     project.property("versions.java")!!.let(JavaVersion::toVersion).let {
-        sourceCompatibility = it
-        targetCompatibility = it
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 }
 
@@ -34,13 +34,18 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-core")
     implementation("org.apache.logging.log4j:log4j-slf4j2-impl")
 
+    testAnnotationProcessor(platform(rootProject))
+    testAnnotationProcessor("org.projectlombok:lombok")
+
+    testCompileOnly("org.projectlombok:lombok")
+
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+
     testImplementation("org.assertj:assertj-core")
     testImplementation("org.mockito:mockito-core")
     testImplementation("org.mockito:mockito-junit-jupiter")
     testImplementation("org.junit.jupiter:junit-jupiter-params")
     testImplementation("org.junit.jupiter:junit-jupiter-api")
-
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
 
 tasks {

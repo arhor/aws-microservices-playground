@@ -2,6 +2,7 @@ package com.github.arhor.aws.microservices.playground.overruns.data.client.impl;
 
 import com.github.arhor.aws.microservices.playground.overruns.data.client.ExpenseAPIClient;
 import com.github.arhor.aws.microservices.playground.overruns.data.model.BudgetOverrunDetails;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.http.client.utils.URIBuilder;
 
@@ -21,6 +22,7 @@ import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 import static java.util.stream.Collectors.joining;
 
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class ExpenseAPIClientImpl implements ExpenseAPIClient {
 
     private static final URI EXPENSE_API_BASE_URI = URI.create(System.getenv("EXPENSE_API_BASE_URI"));
@@ -36,15 +38,6 @@ public class ExpenseAPIClientImpl implements ExpenseAPIClient {
 
     private final HttpClient httpClient;
     private final JsonStreamParser streamParser;
-
-    @Inject
-    public ExpenseAPIClientImpl(
-        final HttpClient httpClient,
-        final JsonStreamParser streamParser
-    ) {
-        this.httpClient = httpClient;
-        this.streamParser = streamParser;
-    }
 
     @Override
     @SneakyThrows

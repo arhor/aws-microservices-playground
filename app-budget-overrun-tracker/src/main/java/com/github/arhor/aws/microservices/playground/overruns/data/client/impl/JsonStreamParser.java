@@ -38,7 +38,7 @@ public class JsonStreamParser {
                 throw new IllegalStateException("Expected content to be an array");
             }
 
-            final var elementType = elementConsumer.type();
+            final var elementType = elementConsumer.getType();
 
             while (parser.nextToken() != JsonToken.END_ARRAY) {
                 final var currentElement = objectMapper.readValue(parser, elementType);
@@ -47,7 +47,7 @@ public class JsonStreamParser {
 
             if (parser.nextToken() == JsonToken.START_OBJECT) {
                 if (attachmentConsumer != null) {
-                    final var attachment = objectMapper.readValue(parser, attachmentConsumer.type());
+                    final var attachment = objectMapper.readValue(parser, attachmentConsumer.getType());
                     attachmentConsumer.accept(attachment);
                 } else {
                     log.debug("Attachment found at the stream end, but no consumer provided");
