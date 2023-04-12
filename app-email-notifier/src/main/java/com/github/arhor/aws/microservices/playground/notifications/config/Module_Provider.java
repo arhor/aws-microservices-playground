@@ -14,7 +14,7 @@ import java.net.http.HttpClient;
  * Declares provider methods, which return instantiated and preconfigured objects.
  */
 @Module
-interface Module_Provider {
+abstract class Module_Provider {
 
     @Provides
     @Singleton

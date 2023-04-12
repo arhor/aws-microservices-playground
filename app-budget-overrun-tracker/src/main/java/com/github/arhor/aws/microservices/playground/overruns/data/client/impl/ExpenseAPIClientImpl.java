@@ -1,6 +1,5 @@
 package com.github.arhor.aws.microservices.playground.overruns.data.client.impl;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.github.arhor.aws.microservices.playground.overruns.data.client.ExpenseAPIClient;
 import com.github.arhor.aws.microservices.playground.overruns.data.model.BudgetOverrunDetails;
 import lombok.SneakyThrows;
@@ -34,8 +33,6 @@ public class ExpenseAPIClientImpl implements ExpenseAPIClient {
     private static final String MEDIA_TYPE_APPLICATION_JSON = "application/json";
 
     private static final String SEPARATOR = ",";
-
-    private static final TypeReference<List<BudgetOverrunDetails>> BUDGETS_TYPE_REF = new TypeReference<>() {};
 
     private final HttpClient httpClient;
     private final JsonStreamParser streamParser;
@@ -74,13 +71,7 @@ public class ExpenseAPIClientImpl implements ExpenseAPIClient {
 
         final var response = httpClient.send(request, BodyHandlers.ofInputStream());
 
-        streamParser.parse(
-            new JsonStreamDescriptor<>(
-                response.body(),
-                BudgetOverrunDetails.class,
-                consumer
-            )
-        );
+        streamParser.parse(response.body(), new TypedConsumer<>(BudgetOverrunDetails.class, consumer));
     }
 
     private String convertToCommaSeparatedString(final List<?> values) {

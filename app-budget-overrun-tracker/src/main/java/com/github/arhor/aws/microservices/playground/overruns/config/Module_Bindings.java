@@ -7,8 +7,11 @@ import com.github.arhor.aws.microservices.playground.overruns.service.impl.Budge
 import dagger.Binds;
 import dagger.Module;
 
+/**
+ * Declares bindings between interfaces/abstract classes and concrete implementations.
+ */
 @Module
-public interface Module_Bindings {
+interface Module_Bindings {
 
     @Binds
     BudgetOverrunTrackerService budgetOverrunTrackerService(BudgetOverrunTrackerServiceImpl impl);

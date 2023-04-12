@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.InputStream;
 
 @Slf4j
 @Singleton
@@ -19,18 +20,25 @@ public class JsonStreamParser {
         this.objectMapper = objectMapper;
     }
 
+    public <E> void parse(final InputStream stream, final TypedConsumer<E> elementConsumer) {
+        parse(stream, elementConsumer, null);
+    }
+
     @SneakyThrows
-    public <T, R> void parse(final JsonStreamDescriptor<T, R> jsonStream) {
+    public <E, A> void parse(
+        final InputStream stream,
+        final TypedConsumer<E> elementConsumer,
+        final TypedConsumer<A> attachmentConsumer
+    ) {
         log.debug("Parsing json data stream...");
 
-        try (final var parser = objectMapper.getFactory().createParser(jsonStream.source())) {
+        try (final var parser = objectMapper.getFactory().createParser(stream)) {
 
             if (parser.nextToken() != JsonToken.START_ARRAY) {
                 throw new IllegalStateException("Expected content to be an array");
             }
 
-            final var elementType = jsonStream.elementType();
-            final var elementConsumer = jsonStream.elementConsumer();
+            final var elementType = elementConsumer.type();
 
             while (parser.nextToken() != JsonToken.END_ARRAY) {
                 final var currentElement = objectMapper.readValue(parser, elementType);
@@ -38,18 +46,11 @@ public class JsonStreamParser {
             }
 
             if (parser.nextToken() == JsonToken.START_OBJECT) {
-                final var attachmentType = jsonStream.attachmentType();
-                final var attachmentConsumer = jsonStream.attachmentConsumer();
-
-                if (attachmentType != null && attachmentConsumer != null) {
-                    final var attachment = objectMapper.readValue(parser, attachmentType);
+                if (attachmentConsumer != null) {
+                    final var attachment = objectMapper.readValue(parser, attachmentConsumer.type());
                     attachmentConsumer.accept(attachment);
                 } else {
-                    log.debug(
-                        "Attachment found at the end of stream, but no type or consumer provided: type={}, consumer={}",
-                        attachmentType,
-                        attachmentConsumer
-                    );
+                    log.debug("Attachment found at the stream end, but no consumer provided");
                 }
             }
         }
