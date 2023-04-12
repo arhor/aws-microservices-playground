@@ -3,11 +3,14 @@ package com.github.arhor.aws.microservices.playground.overruns.data.client.impl;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -15,9 +18,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 
 class JsonStreamParserTest {
+
+    private static final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private record Element(String name, List<String> data) {}
 
@@ -53,22 +58,35 @@ class JsonStreamParserTest {
     );
 
     @Test
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "Convert2Lambda" })
     void should_correctly_parse_streaming_json_accepting_each_object_once_its_ready() throws IOException {
         // Given
         final var inputStream = new PipedInputStream();
         final var outputStream = new PipedOutputStream(inputStream);
 
-        final var elementConsumer = (Consumer<Element>) mock(Consumer.class);
-        final var attachmentConsumer = (Consumer<Attachment>) mock(Consumer.class);
+        final var elementConsumer = spy(new Consumer<Element>() {
+            @Override
+            public void accept(final Element element) {
+                log.info("Consumed element: {}", element);
+            }
+        });
+        final var attachmentConsumer = spy(new Consumer<Attachment>() {
+            @Override
+            public void accept(final Attachment attachment) {
+                log.info("Consumed attachment: {}", attachment);
+            }
+        });
 
         // When
-        CompletableFuture.delayedExecutor(3, TimeUnit.SECONDS).execute(() ->
-            JSON.lines().forEach(line -> {
-                writeLineToStream(line, outputStream);
-                delay(100);
-            })
-        );
+        CompletableFuture.delayedExecutor(3, TimeUnit.SECONDS).execute(() -> {
+            final var lines = JSON.lines().toList();
+
+            for (int i = 0, size = lines.size(); i < size; i++) {
+                writeLineToStream(lines.get(i), outputStream);
+                log.info("{} of {} has been written to output stream", i + 1, size);
+                delay100Millis();
+            }
+        });
 
         streamParser.parse(
             inputStream,
@@ -108,9 +126,9 @@ class JsonStreamParserTest {
         }
     }
 
-    private void delay(final long millis) {
+    private void delay100Millis() {
         try {
-            Thread.sleep(millis);
+            Thread.sleep(100);
         } catch (final InterruptedException e) {
             throw new RuntimeException(e);
         }
