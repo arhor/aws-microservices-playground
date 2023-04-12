@@ -110,7 +110,7 @@ class JsonStreamParserTest {
     private void writeLineToStream(final String line, final OutputStream stream) {
         try {
             stream.write(line.getBytes());
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
     }
