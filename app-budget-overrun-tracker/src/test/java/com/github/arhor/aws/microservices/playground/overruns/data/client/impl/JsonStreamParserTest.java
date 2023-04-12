@@ -2,7 +2,6 @@ package com.github.arhor.aws.microservices.playground.overruns.data.client.impl;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -16,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.mock;
 
 class JsonStreamParserTest {
 
@@ -50,32 +49,26 @@ class JsonStreamParserTest {
     private final JsonStreamParser streamParser = new JsonStreamParser(
         JsonMapper.builder()
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-            .addModule(new JavaTimeModule())
             .build()
     );
 
     @Test
+    @SuppressWarnings("unchecked")
     void should_correctly_parse_streaming_json_accepting_each_object_once_its_ready() throws IOException {
         // Given
         final var inputStream = new PipedInputStream();
         final var outputStream = new PipedOutputStream(inputStream);
 
-        final var elementConsumer = spy(new Consumer<Element>() {
-            @Override
-            public void accept(final Element object) {}
-        });
-        final var attachmentConsumer = spy(new Consumer<Attachment>() {
-            @Override
-            public void accept(final Attachment object) {}
-        });
+        final var elementConsumer = (Consumer<Element>) mock(Consumer.class);
+        final var attachmentConsumer = (Consumer<Attachment>) mock(Consumer.class);
 
         // When
-        CompletableFuture.delayedExecutor(3, TimeUnit.SECONDS).execute(() -> {
+        CompletableFuture.delayedExecutor(3, TimeUnit.SECONDS).execute(() ->
             JSON.lines().forEach(line -> {
                 writeLineToStream(line, outputStream);
                 delay(100);
-            });
-        });
+            })
+        );
 
         streamParser.parse(
             inputStream,
