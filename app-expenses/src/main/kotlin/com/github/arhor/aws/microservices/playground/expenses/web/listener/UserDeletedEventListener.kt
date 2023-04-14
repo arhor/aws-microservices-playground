@@ -2,6 +2,7 @@ package com.github.arhor.aws.microservices.playground.expenses.web.listener
 
 import com.github.arhor.aws.microservices.playground.expenses.service.ExpenseService
 import com.github.arhor.aws.microservices.playground.expenses.service.event.UserDeletedEvent
+import io.awspring.cloud.messaging.listener.SqsMessageDeletionPolicy
 import io.awspring.cloud.messaging.listener.annotation.SqsListener
 import org.slf4j.LoggerFactory
 import org.springframework.messaging.handler.annotation.Payload
@@ -12,10 +13,12 @@ class UserDeletedEventListener(
     private val expenseService: ExpenseService,
 ) {
 
-    @SqsListener(value = ["\${application-props.aws.user-deleted-queue-name}"])
+    @SqsListener(
+        value = ["\${application-props.aws.user-deleted-queue-name}"],
+        deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS
+    )
     fun deleteUserExpenses(@Payload event: UserDeletedEvent) {
-        logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        logger.info("Handled: {}", event)
+        // sometimes the same event being processed several times - why?
         try {
             logger.debug("Processing event: {}", event)
             expenseService.deleteUserExpenses(event.userId)
@@ -24,7 +27,6 @@ class UserDeletedEventListener(
             logger.error("An exception occurred processing event: {}", event, exception)
             throw exception
         }
-        logger.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
     }
 
     companion object {

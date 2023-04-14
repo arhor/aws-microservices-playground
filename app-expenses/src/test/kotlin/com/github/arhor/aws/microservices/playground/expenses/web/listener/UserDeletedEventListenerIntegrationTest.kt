@@ -26,7 +26,7 @@ internal class UserDeletedEventListenerIntegrationTest {
     @Autowired
     private lateinit var queueMessagingTemplate: QueueMessagingTemplate
 
-    @MockkBean
+    @MockkBean(relaxUnitFun = true)
     private lateinit var expenseService: ExpenseService
 
     @Test
@@ -35,10 +35,7 @@ internal class UserDeletedEventListenerIntegrationTest {
         val event = UserDeletedEvent(userId = 1L)
 
         // When
-        queueMessagingTemplate.convertAndSend(
-            TEST_QUEUE_NAME,
-            event
-        )
+        queueMessagingTemplate.convertAndSend(TEST_QUEUE_NAME, event)
 
         // Then
         verify(exactly = 1, timeout = 3000) { expenseService.deleteUserExpenses(event.userId) }
