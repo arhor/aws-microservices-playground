@@ -20,8 +20,8 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UserServiceImpl(
-    @Value("\${application-props.aws.user-deleted-queue-name}")
-    private val queueName: String,
+    @Value("\${application-props.aws.user-deleted-topic-name}")
+    private val topicName: String,
     private val notificationMessagingTemplate: NotificationMessagingTemplate,
     private val userMapper: UserMapper,
     private val userRepository: UserRepository,
@@ -62,7 +62,7 @@ class UserServiceImpl(
             throw EntityNotFoundException("User", "id = $userId")
         }
         userRepository.deleteById(userId)
-        notificationMessagingTemplate.convertAndSend(queueName, UserDeletedEvent(userId))
+        notificationMessagingTemplate.convertAndSend(topicName, UserDeletedEvent(userId))
     }
 
     override fun getUserById(userId: Long): UserResponseDto {
