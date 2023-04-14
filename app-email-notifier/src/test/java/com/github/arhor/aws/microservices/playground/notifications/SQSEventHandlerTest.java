@@ -34,12 +34,11 @@ class SQSEventHandlerTest {
 
         // Given
         final var expectedMessageId = "test-message-id-1";
-        final var expectedMessageBody = """
-            {
-                "user": "1",
-                "text": "test message text 1"
-            }
-            """;
+        final var expectedMessageBody =
+            "{\n" +
+            "    \"user\": \"1\",\n" +
+            "    \"text\": \"test message text 1\"\n" +
+            "}\n";
         final var sqsMessage = createSqsMessage(expectedMessageId, expectedMessageBody);
         final var sqsEvent = createSQSEvent(sqsMessage);
 
@@ -69,20 +68,18 @@ class SQSEventHandlerTest {
 
         // Given
         final var messageId1 = "test-message-id-1";
-        final var messageBody1 = """
-            {
-                "user": "1",
-                "text": "test message text 1"
-            }
-            """;
+        final var messageBody1 =
+            "{\n" +
+            "    \"user\": \"1\",\n" +
+            "    \"text\": \"test message text 1\"\n" +
+            "}\n";
 
         final var messageId2 = "test-message-id-2";
-        final var messageBody2 = """
-            {
-                "user": "2",
-                "text": "test message text 2"
-            }
-            """;
+        final var messageBody2 =
+            "{\n" +
+            "    \"user\": \"2\",\n" +
+            "    \"text\": \"test message text 2\"\n" +
+            "}\n";
 
         final var sqsMessage1 = createSqsMessage(messageId1, messageBody1);
         final var sqsMessage2 = createSqsMessage(messageId2, messageBody2);

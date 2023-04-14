@@ -7,6 +7,7 @@ import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.arhor.aws.microservices.playground.overruns.service.BudgetOverrunTrackerService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 @Slf4j
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class BudgetOverrunTrackerServiceImpl implements BudgetOverrunTrackerService {
 
     private final AmazonDynamoDB amazonDynamoDB;
@@ -26,21 +28,6 @@ public class BudgetOverrunTrackerServiceImpl implements BudgetOverrunTrackerServ
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
     private final DynamoDBMapper dynamoDBMapper;
-
-    @Inject
-    public BudgetOverrunTrackerServiceImpl(
-        final AmazonDynamoDB amazonDynamoDB,
-        final AmazonSNS amazonSNS,
-        final HttpClient httpClient,
-        final ObjectMapper objectMapper,
-        final DynamoDBMapper dynamoDBMapper
-    ) {
-        this.amazonDynamoDB = amazonDynamoDB;
-        this.amazonSNS = amazonSNS;
-        this.httpClient = httpClient;
-        this.objectMapper = objectMapper;
-        this.dynamoDBMapper = dynamoDBMapper;
-    }
 
     @Override
     public void findOverrunsAndSendNotifications() throws IOException, InterruptedException {

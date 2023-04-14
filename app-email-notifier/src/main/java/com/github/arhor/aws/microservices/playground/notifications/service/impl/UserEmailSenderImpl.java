@@ -8,6 +8,7 @@ import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import com.github.arhor.aws.microservices.playground.notifications.service.StringInterpolator;
 import com.github.arhor.aws.microservices.playground.notifications.service.UserEmailSender;
+import lombok.RequiredArgsConstructor;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class UserEmailSenderImpl implements UserEmailSender {
 
     private static final String SES_SENDER_EMAIL_ADDRESS = System.getenv("SES_SENDER_EMAIL_ADDRESS");
@@ -27,36 +29,25 @@ public class UserEmailSenderImpl implements UserEmailSender {
     private static final String ARG_VALUE = "value";
 
     // language=HTML
-    private static final String HTML_BODY_TEMPLATE = """
-        <h1>
-            Budget overrun detected!
-        </h1>
-        <p>
-            Overrun limit: ${limit}<br/>
-            Current value: ${value}<br/>
-        </p>
-        """;
+    private static final String HTML_BODY_TEMPLATE =
+        "<h1>\n" +
+        "    Budget overrun detected!\n" +
+        "</h1>\n" +
+        "<p>\n" +
+        "    Overrun limit: ${limit}<br/>\n" +
+        "    Current value: ${value}<br/>\n" +
+        "</p>\n";
 
-    private static final String TEXT_BODY_TEMPLATE = """
-        ---------- Budget overrun detected! ----------
-                
-                    Overrun limit: ${limit}
-                    Current value: ${value}
-                
-        ----------------------------------------------
-        """;
+    private static final String TEXT_BODY_TEMPLATE =
+        "---------- Budget overrun detected! ----------\n" +
+        "\n" +
+        "            Overrun limit: ${limit}\n" +
+        "            Current value: ${value}\n" +
+        "\n" +
+        "----------------------------------------------\n";
 
     private final AmazonSimpleEmailService amazonSimpleEmailService;
     private final StringInterpolator interpolator;
-
-    @Inject
-    public UserEmailSenderImpl(
-        final AmazonSimpleEmailService amazonSimpleEmailService,
-        final StringInterpolator interpolator
-    ) {
-        this.amazonSimpleEmailService = amazonSimpleEmailService;
-        this.interpolator = interpolator;
-    }
 
     @Override
     public void sendOverrunNotification(final String email, final String limit, final String value) {

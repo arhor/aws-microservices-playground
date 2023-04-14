@@ -2,8 +2,8 @@ package com.github.arhor.aws.microservices.playground.users.config
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.arhor.aws.microservices.playground.users.service.event.UserDeletedEvent
-import jakarta.jms.ConnectionFactory
-import jakarta.jms.Session
+import javax.jms.ConnectionFactory
+import javax.jms.Session
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.jms.annotation.EnableJms

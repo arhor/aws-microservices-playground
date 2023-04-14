@@ -3,6 +3,7 @@ package com.github.arhor.aws.microservices.playground.notifications.service.impl
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.arhor.aws.microservices.playground.notifications.model.User;
 import com.github.arhor.aws.microservices.playground.notifications.service.UsersApiClient;
+import lombok.RequiredArgsConstructor;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -13,6 +14,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse.BodyHandlers;
 
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class UsersApiClientImpl implements UsersApiClient {
 
     private static final String USER_SERVICE_URL = System.getenv("USER_SERVICE_URL");
@@ -20,15 +22,6 @@ public class UsersApiClientImpl implements UsersApiClient {
 
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
-
-    @Inject
-    public UsersApiClientImpl(
-        final HttpClient httpClient,
-        final ObjectMapper objectMapper
-    ) {
-        this.httpClient = httpClient;
-        this.objectMapper = objectMapper;
-    }
 
     @Override
     public User getUserById(final String id) throws IOException, InterruptedException {

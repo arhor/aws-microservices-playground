@@ -5,7 +5,7 @@ import com.github.arhor.aws.microservices.playground.expenses.service.dto.Expens
 import com.github.arhor.aws.microservices.playground.expenses.service.dto.ExpenseResultDTO
 import com.github.arhor.aws.microservices.playground.expenses.service.dto.ExpenseUpdateDTO
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType.APPLICATION_STREAM_JSON_VALUE
+import org.springframework.http.MediaType.APPLICATION_NDJSON_VALUE
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.stream.Stream
 
@@ -33,11 +32,11 @@ class ExpenseController(
         return expenseService.getExpenseById(expenseId)
     }
 
-    @GetMapping(produces = [APPLICATION_STREAM_JSON_VALUE])
+    @GetMapping(produces = [APPLICATION_NDJSON_VALUE])
     fun getExpenses(
         @RequestParam(required = false) skipUids: List<Long>?,
-        @RequestParam(required = false) dateFrom: LocalDate?,
-        @RequestParam(required = false) dateTill: LocalDate?,
+        @RequestParam dateFrom: LocalDate,
+        @RequestParam dateTill: LocalDate,
     ): Stream<ExpenseResultDTO> {
 
         return expenseService.getExpenses(skipUids, dateFrom, dateTill)

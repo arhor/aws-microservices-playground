@@ -35,6 +35,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-core")
     implementation("org.apache.logging.log4j:log4j-slf4j2-impl")
 
+    testAnnotationProcessor(platform(rootProject))
     testAnnotationProcessor("org.projectlombok:lombok")
 
     testCompileOnly("org.projectlombok:lombok")

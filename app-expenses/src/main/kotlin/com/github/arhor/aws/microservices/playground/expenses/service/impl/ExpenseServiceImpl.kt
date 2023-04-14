@@ -33,8 +33,15 @@ class ExpenseServiceImpl(
     ): Stream<ExpenseResultDTO> {
 
         return expenseRepository
-            .findAllWithinDateRangeSkippingUserIds(skipUids ?: emptyList(), dateFrom, dateTill)
-            .peek { throw RuntimeException("BOOM!!!") }
+            .findAllWithinDateRangeSkippingUserIds(
+                skipUids = if (skipUids.isNullOrEmpty()) {
+                    NO_USERS_TO_SKIP
+                } else {
+                    skipUids
+                },
+                dateFrom = dateFrom,
+                dateTill = dateTill
+            )
             .map(expenseMapper::mapExpenseToResultDto)
     }
 
@@ -45,7 +52,7 @@ class ExpenseServiceImpl(
 
     @Transactional
     @Retryable(
-        retryFor = [OptimisticLockingFailureException::class],
+        include = [OptimisticLockingFailureException::class],
         maxAttemptsExpression = "\${application-props.retry-attempts}",
     )
     override fun updateExpense(expenseId: Long, dto: ExpenseUpdateDTO): ExpenseResultDTO {
@@ -67,5 +74,6 @@ class ExpenseServiceImpl(
 
     companion object {
         private val logger = LoggerFactory.getLogger(ExpenseServiceImpl::class.java)
+        private val NO_USERS_TO_SKIP = listOf(-1L)
     }
 }

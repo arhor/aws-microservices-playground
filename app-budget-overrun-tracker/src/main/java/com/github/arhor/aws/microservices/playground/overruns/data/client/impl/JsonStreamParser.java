@@ -2,6 +2,7 @@ package com.github.arhor.aws.microservices.playground.overruns.data.client.impl;
 
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,14 +12,10 @@ import java.io.InputStream;
 
 @Slf4j
 @Singleton
+@RequiredArgsConstructor(onConstructor_ = @Inject)
 public class JsonStreamParser {
 
     private final ObjectMapper objectMapper;
-
-    @Inject
-    public JsonStreamParser(final ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
 
     public <E> void parse(final InputStream stream, final TypedConsumer<E> elementConsumer) {
         parse(stream, elementConsumer, null);

@@ -34,7 +34,7 @@ class SQSMessageProcessorServiceTest {
         var sqsMessage = createSqsMessage("message-id", "message-body");
 
         var notification = new Notification("user", "text");
-        var user = new User(notification.user(), "email", "limit");
+        var user = new User(notification.getUser(), "email", "limit");
 
         doReturn(notification)
             .when(objectMapper)
@@ -58,10 +58,10 @@ class SQSMessageProcessorServiceTest {
 
         then(usersApiClient)
             .should()
-            .getUserById(notification.user());
+            .getUserById(notification.getUser());
 
         then(userEmailSender)
             .should()
-            .sendOverrunNotification(user.email(), user.budgetLimit(), notification.text());
+            .sendOverrunNotification(user.getEmail(), user.getBudgetLimit(), notification.getText());
     }
 }

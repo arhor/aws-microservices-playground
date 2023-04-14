@@ -38,7 +38,7 @@ class UserServiceImpl(
     }
 
     @Retryable(
-        retryFor = [OptimisticLockingFailureException::class],
+        include = [OptimisticLockingFailureException::class],
         maxAttemptsExpression = "\${application-props.retry-attempts}"
     )
     @Transactional

@@ -6,22 +6,21 @@ import com.amazonaws.services.lambda.runtime.events.SQSBatchResponse;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import com.github.arhor.aws.microservices.playground.notifications.config.DaggerServiceFactory;
 import com.github.arhor.aws.microservices.playground.notifications.service.SQSMessageProcessorService;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 
 @Slf4j
 @SuppressWarnings("unused")
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class SQSEventHandler implements RequestHandler<SQSEvent, SQSBatchResponse> {
 
     private final SQSMessageProcessorService sqsMessageProcessorService;
 
     public SQSEventHandler() {
         this(DaggerServiceFactory.create().sqsMessageProcessorService());
-    }
-
-    SQSEventHandler(final SQSMessageProcessorService sqsMessageProcessorService) {
-        this.sqsMessageProcessorService = sqsMessageProcessorService;
     }
 
     @Override

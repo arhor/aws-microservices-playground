@@ -18,6 +18,7 @@ import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import java.math.BigDecimal
 import java.time.LocalDate
+import kotlin.streams.toList
 
 @Tag("integration")
 @DataJdbcTest
@@ -69,6 +70,43 @@ internal class ExpenseRepositoryIntegrationTest {
     }
 
     @Test
+    fun `should return expected list of expenses within the given period without excluded users`() {
+        // Given
+        val dateFrom = LocalDate.of(2023, 3, 1)
+        val dateTill = LocalDate.of(2023, 3, 30)
+
+        val expectedExpenses = expenseRepository.saveAll(
+            listOf(
+                Expense(userId = 1, amount = BigDecimal("10.11"), date = dateFrom.plusDays(1)),
+                Expense(userId = 1, amount = BigDecimal("20.22"), date = dateFrom.plusDays(2)),
+                Expense(userId = 2, amount = BigDecimal("15.33"), date = dateFrom.plusDays(3)),
+                Expense(userId = 2, amount = BigDecimal("15.44"), date = dateFrom.plusDays(4)),
+            )
+        )
+        val incorrectExpenses = expenseRepository.saveAll(
+            listOf(
+                Expense(userId = 1, amount = BigDecimal("11.11"), date = dateTill.plusDays(1)),
+                Expense(userId = 2, amount = BigDecimal("22.22"), date = dateTill.plusDays(2)),
+                Expense(userId = 3, amount = BigDecimal("33.33"), date = dateTill),
+            )
+        )
+
+        // When
+        val result = expenseRepository
+            .findAllWithinDateRangeSkippingUserIds(
+                skipUids = listOf(3),
+                dateFrom = dateFrom,
+                dateTill = dateTill,
+            )
+            .use { it.toList() }
+
+        // Then
+        assertThat(result)
+            .containsExactlyElementsOf(expectedExpenses)
+            .doesNotContainAnyElementsOf(incorrectExpenses)
+    }
+
+    @Test
     fun `should delete expenses associated with passed user id and return number deleted rows`() {
         // Given
         val userIdToDelete = 1L
@@ -83,14 +121,14 @@ internal class ExpenseRepositoryIntegrationTest {
                 amount = value,
                 userId = userIdToDelete,
             )
-        })
+        }).toList()
         val expensesToRetain = expenseRepository.saveAll((1..10).map {
             Expense(
                 date = today,
                 amount = value,
                 userId = userIdToRetain
             )
-        })
+        }).toList()
 
         // When
         val deletedRowsNumber = expenseRepository.deleteByUserId(userIdToDelete)
