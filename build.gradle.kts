@@ -20,6 +20,7 @@ dependencies {
         api("com.google.dagger:dagger:${property("versions.dagger")}")
         api("com.google.dagger:dagger-compiler:${property("versions.dagger")}")
         api("com.ninja-squad:springmockk:${property("versions.spring-mockk")}")
+        api("io.awspring.cloud:spring-cloud-starter-aws-messaging:${property("versions.spring-cloud-aws")}")
         api("org.apache.commons:commons-text:${property("versions.commons-text")}")
         api("org.apache.logging.log4j:log4j-api:${property("versions.log4j2")}")
         api("org.apache.logging.log4j:log4j-core:${property("versions.log4j2")}")

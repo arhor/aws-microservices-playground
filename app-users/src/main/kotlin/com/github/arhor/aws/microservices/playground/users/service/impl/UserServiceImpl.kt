@@ -10,10 +10,10 @@ import com.github.arhor.aws.microservices.playground.users.service.event.UserDel
 import com.github.arhor.aws.microservices.playground.users.service.exception.EntityDuplicateException
 import com.github.arhor.aws.microservices.playground.users.service.exception.EntityNotFoundException
 import com.github.arhor.aws.microservices.playground.users.service.mapper.UserMapper
+import io.awspring.cloud.messaging.core.NotificationMessagingTemplate
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.dao.OptimisticLockingFailureException
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.jms.core.JmsTemplate
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional
 class UserServiceImpl(
     @Value("\${application-props.aws.user-deleted-queue-name}")
     private val queueName: String,
-    private val jmsTemplate: JmsTemplate,
+    private val notificationMessagingTemplate: NotificationMessagingTemplate,
     private val userMapper: UserMapper,
     private val userRepository: UserRepository,
 ) : UserService {
@@ -62,7 +62,7 @@ class UserServiceImpl(
             throw EntityNotFoundException("User", "id = $userId")
         }
         userRepository.deleteById(userId)
-        jmsTemplate.convertAndSend(queueName, UserDeletedEvent(userId))
+        notificationMessagingTemplate.convertAndSend(queueName, UserDeletedEvent(userId))
     }
 
     override fun getUserById(userId: Long): UserResponseDto {

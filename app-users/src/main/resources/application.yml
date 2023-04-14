@@ -54,11 +54,20 @@ application-props:
   api-path-prefix: /api
   aws:
     url: ${AWS_URL}
-    region: ${AWS_REGION}
-    access-key: ${AWS_ACCESS_KEY}
-    secret-key: ${AWS_SECRET_KEY}
     user-deleted-queue-name: ${AWS_QUEUE_NAME}
 
+cloud:
+  aws:
+    region:
+      static: ${AWS_REGION}
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    sns:
+      enabled: true
+      endpoint: ${AWS_ENDPOINT}
+    sqs:
+      enabled: false
 ---
 
 spring:
@@ -68,3 +77,8 @@ spring:
     import:
       - optional:file:./.env.dev[.properties]
       - optional:file:./app-users/.env.dev[.properties]
+
+cloud:
+  aws:
+    sns:
+      endpoint: ${AWS_ENDPOINT}
