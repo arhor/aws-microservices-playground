@@ -1,23 +1,17 @@
 package com.github.arhor.aws.microservices.playground.expenses.web.listener
 
-import com.github.arhor.aws.microservices.playground.expenses.config.ConfigureAwsIntegration
-import com.github.arhor.aws.microservices.playground.expenses.config.ConfigureMessaging
 import com.github.arhor.aws.microservices.playground.expenses.service.ExpenseService
 import com.github.arhor.aws.microservices.playground.expenses.service.event.UserDeletedEvent
 import com.ninjasquad.springmockk.MockkBean
-import com.ninjasquad.springmockk.SpykBean
+import io.awspring.cloud.messaging.core.QueueMessagingTemplate
+import io.awspring.cloud.test.sqs.SqsTest
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration
-import org.springframework.jms.core.JmsTemplate
-import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
-import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.testcontainers.containers.localstack.LocalStackContainer
 import org.testcontainers.containers.localstack.LocalStackContainer.Service.SQS
 import org.testcontainers.junit.jupiter.Container
@@ -25,24 +19,15 @@ import org.testcontainers.junit.jupiter.Testcontainers
 import org.testcontainers.utility.DockerImageName
 
 @Tag("integration")
-@ExtendWith(SpringExtension::class)
+@SqsTest(UserDeletedEventListener::class)
 @Testcontainers(disabledWithoutDocker = true)
-@ContextConfiguration(
-    classes = [
-        ConfigureAwsIntegration::class,
-        ConfigureMessaging::class,
-        JmsAutoConfiguration::class,
-    ]
-)
-@MockkBean(classes = [ExpenseService::class], relaxUnitFun = true)
-internal class
-UserDeletedEventListenerIntegrationTest {
-
-    @SpykBean
-    private lateinit var userDeletedEventListener: UserDeletedEventListener
+internal class UserDeletedEventListenerIntegrationTest {
 
     @Autowired
-    private lateinit var jmsTemplate: JmsTemplate
+    private lateinit var queueMessagingTemplate: QueueMessagingTemplate
+
+    @MockkBean
+    private lateinit var expenseService: ExpenseService
 
     @Test
     fun `should send an event to SQS then correctly consume it via UserDeletedEventListener instance`() {
@@ -50,10 +35,13 @@ UserDeletedEventListenerIntegrationTest {
         val event = UserDeletedEvent(userId = 1L)
 
         // When
-        jmsTemplate.convertAndSend(TEST_QUEUE_NAME, event)
+        queueMessagingTemplate.convertAndSend(
+            TEST_QUEUE_NAME,
+            event
+        )
 
         // Then
-        verify(exactly = 1, timeout = 3000) { userDeletedEventListener.deleteUserExpenses(event) }
+        verify(exactly = 1, timeout = 3000) { expenseService.deleteUserExpenses(event.userId) }
     }
 
     companion object {
@@ -68,10 +56,10 @@ UserDeletedEventListenerIntegrationTest {
         @JvmStatic
         @DynamicPropertySource
         fun registerDynamicProperties(registry: DynamicPropertyRegistry) {
-            registry.add("application-props.aws.url") { localstack.getEndpointOverride(SQS) }
-            registry.add("application-props.aws.region") { localstack.region }
-            registry.add("application-props.aws.access-key") { localstack.accessKey }
-            registry.add("application-props.aws.secret-key") { localstack.secretKey }
+            registry.add("cloud.aws.region.static") { localstack.region }
+            registry.add("cloud.aws.credentials.access-key") { localstack.accessKey }
+            registry.add("cloud.aws.credentials.secret-key") { localstack.secretKey }
+            registry.add("cloud.aws.sqs.endpoint") { localstack.getEndpointOverride(SQS) }
             registry.add("application-props.aws.user-deleted-queue-name") { TEST_QUEUE_NAME }
         }
 
