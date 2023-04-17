@@ -6,12 +6,11 @@ import com.github.arhor.aws.microservices.playground.users.service.UserService
 import com.github.arhor.aws.microservices.playground.users.service.dto.UserCreateRequestDto
 import com.github.arhor.aws.microservices.playground.users.service.dto.UserResponseDto
 import com.github.arhor.aws.microservices.playground.users.service.dto.UserUpdateRequestDto
-import com.github.arhor.aws.microservices.playground.users.service.event.UserDeletedEvent
+import com.github.arhor.aws.microservices.playground.users.service.event.UserEvent
+import com.github.arhor.aws.microservices.playground.users.service.event.UserEventEmitter
 import com.github.arhor.aws.microservices.playground.users.service.exception.EntityDuplicateException
 import com.github.arhor.aws.microservices.playground.users.service.exception.EntityNotFoundException
 import com.github.arhor.aws.microservices.playground.users.service.mapper.UserMapper
-import io.awspring.cloud.messaging.core.NotificationMessagingTemplate
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.dao.OptimisticLockingFailureException
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.retry.annotation.Retryable
@@ -20,11 +19,9 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UserServiceImpl(
-    @Value("\${application-props.aws.user-deleted-topic-name}")
-    private val topicName: String,
-    private val notificationMessagingTemplate: NotificationMessagingTemplate,
     private val userMapper: UserMapper,
     private val userRepository: UserRepository,
+    private val userEventEmitter: UserEventEmitter,
 ) : UserService {
 
     @Transactional
@@ -62,7 +59,7 @@ class UserServiceImpl(
             throw EntityNotFoundException("User", "id = $userId")
         }
         userRepository.deleteById(userId)
-        notificationMessagingTemplate.convertAndSend(topicName, UserDeletedEvent(userId))
+        userEventEmitter.emit(UserEvent.Deleted(userId))
     }
 
     override fun getUserById(userId: Long): UserResponseDto {
@@ -76,7 +73,8 @@ class UserServiceImpl(
             .map(userMapper::mapToUserResponse)
     }
 
-    private fun getUserOrThrowException(userId: Long): User =
-        userRepository.findByIdOrNull(userId)
+    private fun getUserOrThrowException(userId: Long): User {
+        return userRepository.findByIdOrNull(userId)
             ?: throw EntityNotFoundException("User", "id = $userId")
+    }
 }
