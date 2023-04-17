@@ -53,7 +53,7 @@ class ExpenseServiceImpl(
     @Transactional
     @Retryable(
         include = [OptimisticLockingFailureException::class],
-        maxAttemptsExpression = "\${application-props.retry-attempts}",
+        maxAttemptsExpression = "\${application-props.retry-attempts:3}",
     )
     override fun updateExpense(expenseId: Long, dto: ExpenseUpdateDTO): ExpenseResultDTO {
         // emit event to the queue since budget overrun may be not relevant after expense update

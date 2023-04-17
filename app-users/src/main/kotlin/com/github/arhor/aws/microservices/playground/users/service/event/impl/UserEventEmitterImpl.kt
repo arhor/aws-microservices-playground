@@ -17,7 +17,7 @@ class UserEventEmitterImpl(
 
     @Retryable(
         include = [MessagingException::class],
-        maxAttemptsExpression = "\${application-props.retry-attempts}"
+        maxAttemptsExpression = "\${application-props.retry-attempts:3}"
     )
     override fun emit(event: UserEvent) {
         val targetTopicName = when (event) {

@@ -36,7 +36,7 @@ class UserServiceImpl(
 
     @Retryable(
         include = [OptimisticLockingFailureException::class],
-        maxAttemptsExpression = "\${application-props.retry-attempts}"
+        maxAttemptsExpression = "\${application-props.retry-attempts:3}"
     )
     @Transactional
     override fun updateUser(userId: Long, updateRequest: UserUpdateRequestDto): UserResponseDto {

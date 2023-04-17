@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.util.UriComponentsBuilder
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 
 @RestController
 @RequestMapping("/users")
@@ -24,13 +24,13 @@ class UserController(
 ) {
 
     @PostMapping
-    fun createUser(
-        @RequestBody
-        createRequest: UserCreateRequestDto,
-        uriBuilder: UriComponentsBuilder,
-    ): ResponseEntity<UserResponseDto> {
+    fun createUser(@RequestBody createRequest: UserCreateRequestDto): ResponseEntity<UserResponseDto> {
         val createdUser = userService.createUser(createRequest)
-        val locationUri = uriBuilder.path("/{userId}").build(createdUser.id)
+        val locationUri =
+            ServletUriComponentsBuilder
+                .fromCurrentRequestUri()
+                .path("/{userId}")
+                .build(createdUser.id)
 
         return ResponseEntity.created(locationUri).body(createdUser)
     }
