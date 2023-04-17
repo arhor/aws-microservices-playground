@@ -1,5 +1,6 @@
 package com.github.arhor.aws.microservices.playground.users.config
 
+import com.github.arhor.aws.microservices.playground.users.config.props.ApplicationProps
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.bind.annotation.RestController
@@ -12,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 class ConfigureWebServer(private val applicationProps: ApplicationProps) : WebMvcConfigurer {
 
     override fun configurePathMatch(configurer: PathMatchConfigurer) {
-        configurer.addPathPrefix(applicationProps.apiPathPrefix, classesAnnotatedWith<RestController>())
+        applicationProps.apiPathPrefix?.let { configurer.addPathPrefix(it, classesAnnotatedWith<RestController>()) }
     }
 
     companion object {
