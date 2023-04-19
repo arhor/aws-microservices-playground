@@ -4,6 +4,7 @@
 
 awslocal sns create-topic --name user-updated-events-topic --output table | cat
 awslocal sns create-topic --name user-deleted-events-topic --output table | cat
+
 awslocal sns create-topic --name expense-updated-events-topic --output table | cat
 awslocal sns create-topic --name expense-deleted-events-topic --output table | cat
 
