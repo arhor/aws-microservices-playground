@@ -76,7 +76,7 @@ class GlobalExceptionHandler(
         details: List<String> = emptyList(),
         vararg args: Any?
     ): ErrorResponse {
-        log.error(exception.message, exception)
+        log.error("An exception occurred during controller method execution", exception)
 
         val localizedMessage = messages.getMessage(errorCode.label, args, locale)
         val currentTimestamp = currentDateTimeSupplier.get()

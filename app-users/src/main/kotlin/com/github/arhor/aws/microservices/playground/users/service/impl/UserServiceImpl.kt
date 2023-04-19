@@ -1,6 +1,6 @@
 package com.github.arhor.aws.microservices.playground.users.service.impl
 
-import com.github.arhor.aws.microservices.playground.users.data.model.User
+import com.github.arhor.aws.microservices.playground.users.Operation
 import com.github.arhor.aws.microservices.playground.users.data.repository.UserRepository
 import com.github.arhor.aws.microservices.playground.users.service.UserService
 import com.github.arhor.aws.microservices.playground.users.service.dto.UserCreateRequestDto
@@ -27,7 +27,11 @@ class UserServiceImpl(
     @Transactional
     override fun createUser(createRequest: UserCreateRequestDto): UserResponseDto {
         if (userRepository.existsByEmail(createRequest.email)) {
-            throw EntityDuplicateException("User", "email = ${createRequest.email}")
+            throw EntityDuplicateException(
+                entity = "User",
+                condition = "email = ${createRequest.email}",
+                operation = Operation.CREATE,
+            )
         }
         return userMapper.mapToUser(createRequest)
             .let { userRepository.save(it) }
@@ -40,7 +44,12 @@ class UserServiceImpl(
     )
     @Transactional
     override fun updateUser(userId: Long, updateRequest: UserUpdateRequestDto): UserResponseDto {
-        var user = getUserOrThrowException(userId)
+        var user = userRepository.findByIdOrNull(userId)
+            ?: throw EntityNotFoundException(
+                entity = "User",
+                condition = "id = $userId",
+                operation = Operation.UPDATE,
+            )
 
         updateRequest.password?.let {
             user = user.copy(password = it)
@@ -56,25 +65,29 @@ class UserServiceImpl(
     @Transactional
     override fun deleteUserById(userId: Long) {
         if (!userRepository.existsById(userId)) {
-            throw EntityNotFoundException("User", "id = $userId")
+            throw EntityNotFoundException(
+                entity = "User",
+                condition = "id = $userId",
+                operation = Operation.DELETE,
+            )
         }
         userRepository.deleteById(userId)
         userEventEmitter.emit(UserEvent.Deleted(userId))
     }
 
     override fun getUserById(userId: Long): UserResponseDto {
-        return getUserOrThrowException(userId)
-            .let(userMapper::mapToUserResponse)
+        val user = userRepository.findByIdOrNull(userId)
+            ?: throw EntityNotFoundException(
+                entity = "User",
+                condition = "id = $userId",
+                operation = Operation.READ,
+            )
+        return user.let(userMapper::mapToUserResponse)
     }
 
     override fun getAllUsers(): List<UserResponseDto> {
         return userRepository
             .findAll()
             .map(userMapper::mapToUserResponse)
-    }
-
-    private fun getUserOrThrowException(userId: Long): User {
-        return userRepository.findByIdOrNull(userId)
-            ?: throw EntityNotFoundException("User", "id = $userId")
     }
 }
