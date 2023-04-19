@@ -189,8 +189,28 @@ horizontal scaling limit was increased from 100 up to 800-1000 instances.
 
 ```
 
-
 ------------------------------------------------------------------------------------------------------------------------
 
 * describe failure
 * describe success
+
+fresh direct - kotlin
+
+from high to details: high overview -> more detailed -> details on concrete point
+
+training
+
+* my achievements
+* great success
+* great failure
+* conflict 
+* customer communication
+* high-level project overview
+
+omit framework names
+
+communication, code review, coding, team-communication
+
+try to make prioritization documentation (priority framework)
+
+START - 4-8 sentences to answer
