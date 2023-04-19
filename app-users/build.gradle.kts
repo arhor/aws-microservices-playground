@@ -54,7 +54,6 @@ dependencies {
 
     implementation(platform(rootProject))
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("com.google.code.findbugs:jsr305")
     implementation("io.awspring.cloud:spring-cloud-starter-aws-messaging")
     implementation("org.flywaydb:flyway-core")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
