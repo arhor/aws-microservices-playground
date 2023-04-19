@@ -5,23 +5,26 @@ import com.github.arhor.aws.microservices.playground.users.data.model.User
 import com.github.arhor.aws.microservices.playground.users.data.repository.UserRepository
 import com.github.arhor.aws.microservices.playground.users.service.dto.UserCreateRequestDto
 import com.github.arhor.aws.microservices.playground.users.service.dto.UserResponseDto
+import com.github.arhor.aws.microservices.playground.users.service.dto.UserUpdateRequestDto
 import com.github.arhor.aws.microservices.playground.users.service.event.UserEventEmitter
 import com.github.arhor.aws.microservices.playground.users.service.exception.EntityDuplicateException
+import com.github.arhor.aws.microservices.playground.users.service.exception.EntityNotFoundException
 import com.github.arhor.aws.microservices.playground.users.service.impl.UserServiceImpl
 import com.github.arhor.aws.microservices.playground.users.service.mapper.UserMapper
 import io.mockk.Call
 import io.mockk.MockKAnswerScope
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
+import org.assertj.core.api.Assertions.catchException
 import org.assertj.core.api.Assertions.from
 import org.assertj.core.api.InstanceOfAssertFactories.throwable
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
+import java.util.Optional
 
 internal class UserServiceTest {
 
@@ -45,19 +48,19 @@ internal class UserServiceTest {
             val expectedPassword = "TestPassword123"
             val expectedBudgetLimit = BigDecimal("150.00")
 
+            val userCreateRequest = UserCreateRequestDto(
+                email = expectedEmail,
+                password = expectedPassword,
+                budgetLimit = expectedBudgetLimit,
+            )
+
             every { userRepository.existsByEmail(any()) } returns false
             every { userMapper.mapToUser(any()) } answers convertingDtoToUser()
             every { userRepository.save(any()) } answers copyingUserWithAssignedId(id = expectedId)
             every { userMapper.mapToUserResponse(any()) } answers convertingUserToDto()
 
             // When
-            val result = userService.createUser(
-                UserCreateRequestDto(
-                    email = expectedEmail,
-                    password = expectedPassword,
-                    budgetLimit = expectedBudgetLimit,
-                )
-            )
+            val result = userService.createUser(userCreateRequest)
 
             // Then
             assertThat(result)
@@ -66,6 +69,9 @@ internal class UserServiceTest {
                 .returns(expectedBudgetLimit, from { it.budgetLimit })
 
             verify(exactly = 1) { userRepository.existsByEmail(expectedEmail) }
+            verify(exactly = 1) { userMapper.mapToUser(userCreateRequest) }
+            verify(exactly = 1) { userRepository.save(any()) }
+            verify(exactly = 1) { userMapper.mapToUserResponse(any()) }
         }
 
         @Test
@@ -84,10 +90,10 @@ internal class UserServiceTest {
             every { userRepository.existsByEmail(any()) } returns true
 
             // When
-            val action = ThrowingCallable { userService.createUser(userCreateRequest) }
+            val result = catchException { userService.createUser(userCreateRequest) }
 
             // Then
-            assertThatThrownBy(action)
+            assertThat(result)
                 .isInstanceOf(expectedExceptionType)
                 .asInstanceOf(throwable(expectedExceptionType))
                 .satisfies(
@@ -100,6 +106,90 @@ internal class UserServiceTest {
         }
     }
 
+    @Nested
+    inner class `UserService # updateUser` {
+        @Test
+        fun `should correctly update an existing user and return it with updated fields`() {
+            // Given
+            val expectedId = 1L
+            val expectedEmail = "test@email.com"
+            val expectedPassword = "TestPassword123"
+            val expectedBudgetLimit = BigDecimal("150.00")
+
+            val initialBudgetLimit = BigDecimal("100.00")
+            val initialPassword = "initial password"
+
+            val initialUser = User(
+                id = expectedId,
+                email = expectedEmail,
+                password = initialPassword,
+                budget = Budget(limit = initialBudgetLimit)
+            )
+
+            val userOnSave = slot<User>()
+
+            every { userRepository.findById(any()) } returns Optional.of(initialUser)
+            every { userRepository.save(any()) } answers copyingUser()
+            every { userMapper.mapToUserResponse(any()) } answers convertingUserToDto()
+
+            // When
+            val result = userService.updateUser(
+                expectedId,
+                UserUpdateRequestDto(
+                    password = expectedPassword,
+                    budgetLimit = expectedBudgetLimit,
+                )
+            )
+
+            // Then
+            verify(exactly = 1) { userRepository.findById(expectedId) }
+            verify(exactly = 1) { userRepository.save(capture(userOnSave)) }
+            verify(exactly = 1) { userMapper.mapToUserResponse(userOnSave.captured) }
+
+            assertThat(result)
+                .returns(expectedId, from { it.id })
+                .returns(expectedEmail, from { it.email })
+                .returns(expectedBudgetLimit, from { it.budgetLimit })
+
+            assertThat(userOnSave.captured)
+                .returns(expectedId, from { it.id })
+                .returns(expectedEmail, from { it.email })
+                .returns(expectedPassword, from { it.password })
+                .returns(expectedBudgetLimit, from { it.budget.limit })
+        }
+
+        @Test
+        fun `should throw EntityNotFoundException updating a non-existing user`() {
+            // Given
+            val userCreateRequest = UserUpdateRequestDto(
+                password = "TestPassword123",
+                budgetLimit = BigDecimal("150.00")
+            )
+            val expectedId = 1L
+            val expectedEntity = "User"
+            val expectedOperation = "UPDATE"
+            val expectedCondition = "id = $expectedId"
+            val expectedExceptionType = EntityNotFoundException::class.java
+
+            every { userRepository.findById(any()) } returns Optional.empty()
+
+            // When
+            val result = catchException { userService.updateUser(expectedId, userCreateRequest) }
+
+            // Then
+            verify(exactly = 1) { userRepository.findById(expectedId) }
+
+            assertThat(result)
+                .isInstanceOf(expectedExceptionType)
+                .asInstanceOf(throwable(expectedExceptionType))
+                .satisfies(
+                    { assertThat(it.entity).describedAs("entity").isEqualTo(expectedEntity) },
+                    { assertThat(it.operation).describedAs("operation").isEqualTo(expectedOperation) },
+                    { assertThat(it.condition).describedAs("condition").isEqualTo(expectedCondition) },
+                )
+        }
+    }
+
     private fun convertingDtoToUser(): MockKAnswerScope<User, *>.(Call) -> User = {
         firstArg<UserCreateRequestDto>().let {
             User(
@@ -108,6 +198,10 @@ internal class UserServiceTest {
                 budget = Budget(it.budgetLimit),
             )
         }
+    }
+
+    private fun copyingUser(): MockKAnswerScope<User, *>.(Call) -> User = {
+        firstArg<User>().copy()
     }
 
     private fun copyingUserWithAssignedId(id: Long): MockKAnswerScope<User, *>.(Call) -> User = {
