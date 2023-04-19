@@ -24,5 +24,5 @@ interface UserMapper {
     fun mapToUser(createRequest: UserCreateRequestDto): User
 
     @Mapping(target = "budgetLimit", source = "budget.limit")
-    fun mapToUserResponse(user: User): UserResponseDto
+    fun mapEntityToResponseDTO(user: User): UserResponseDto
 }

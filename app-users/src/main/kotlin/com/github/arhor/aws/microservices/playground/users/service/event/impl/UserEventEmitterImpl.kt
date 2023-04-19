@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class UserEventEmitterImpl(
+    @Value("\${application-props.aws.user-updated-topic-name}")
+    private val userUpdatedTopicName: String,
     @Value("\${application-props.aws.user-deleted-topic-name}")
     private val userDeletedTopicName: String,
     private val notificationMessagingTemplate: NotificationMessagingTemplate,
@@ -20,9 +22,10 @@ class UserEventEmitterImpl(
         maxAttemptsExpression = "\${application-props.retry-attempts:3}"
     )
     override fun emit(event: UserEvent) {
-        val targetTopicName = when (event) {
+        val destinationTopic = when (event) {
+            is UserEvent.Updated -> userUpdatedTopicName
             is UserEvent.Deleted -> userDeletedTopicName
         }
-        notificationMessagingTemplate.convertAndSend(targetTopicName, event)
+        notificationMessagingTemplate.convertAndSend(destinationTopic, event)
     }
 }

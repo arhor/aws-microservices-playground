@@ -31,5 +31,5 @@ interface ExpenseRepository : CrudRepository<Expense, Long> {
 
     @Modifying
     @Query(value = "DELETE FROM expenses e WHERE e.user_id = :userId")
-    fun deleteByUserId(userId: Long): Int
+    fun deleteByUserIdReturningNumberRecordsAffected(userId: Long): Int
 }

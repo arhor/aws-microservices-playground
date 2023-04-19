@@ -1,7 +1,7 @@
 package com.github.arhor.aws.microservices.playground.expenses.web.listener
 
 import com.github.arhor.aws.microservices.playground.expenses.service.ExpenseService
-import com.github.arhor.aws.microservices.playground.expenses.service.event.UserDeletedEvent
+import com.github.arhor.aws.microservices.playground.expenses.service.event.UserEvent
 import io.awspring.cloud.messaging.listener.SqsMessageDeletionPolicy
 import io.awspring.cloud.messaging.listener.annotation.SqsListener
 import org.slf4j.LoggerFactory
@@ -9,7 +9,7 @@ import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.stereotype.Component
 
 @Component
-class UserDeletedEventListener(
+class UserEventListener(
     private val expenseService: ExpenseService,
 ) {
 
@@ -17,7 +17,7 @@ class UserDeletedEventListener(
         value = ["\${application-props.aws.user-deleted-queue-name}"],
         deletionPolicy = SqsMessageDeletionPolicy.ON_SUCCESS
     )
-    fun deleteUserExpenses(@Payload event: UserDeletedEvent) {
+    fun handleUserDeletedEvent(@Payload event: UserEvent.Deleted) {
         // sometimes the same event being processed several times - why?
         try {
             logger.debug("Processing event: {}", event)
@@ -30,6 +30,6 @@ class UserDeletedEventListener(
     }
 
     companion object {
-        private val logger = LoggerFactory.getLogger(UserDeletedEventListener::class.java)
+        private val logger = LoggerFactory.getLogger(UserEventListener::class.java)
     }
 }

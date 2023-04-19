@@ -53,7 +53,8 @@ application-props:
   retry-attempts: 5
   api-path-prefix: /api
   aws:
-    user-deleted-topic-name: ${AWS_TOPIC_NAME}
+    user-deleted-topic-name: ${AWS_SNS_USER_UPDATED_TOPIC}
+    user-updated-topic-name: ${AWS_SNS_USER_DELETED_TOPIC}
 
 cloud:
   aws:

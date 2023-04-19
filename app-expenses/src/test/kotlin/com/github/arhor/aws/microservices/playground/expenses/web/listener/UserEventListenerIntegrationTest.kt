@@ -1,7 +1,7 @@
 package com.github.arhor.aws.microservices.playground.expenses.web.listener
 
 import com.github.arhor.aws.microservices.playground.expenses.service.ExpenseService
-import com.github.arhor.aws.microservices.playground.expenses.service.event.UserDeletedEvent
+import com.github.arhor.aws.microservices.playground.expenses.service.event.UserEvent
 import com.ninjasquad.springmockk.MockkBean
 import io.awspring.cloud.messaging.core.QueueMessagingTemplate
 import io.awspring.cloud.test.sqs.SqsTest
@@ -19,9 +19,9 @@ import org.testcontainers.junit.jupiter.Testcontainers
 import org.testcontainers.utility.DockerImageName
 
 @Tag("integration")
-@SqsTest(UserDeletedEventListener::class)
+@SqsTest(UserEventListener::class)
 @Testcontainers(disabledWithoutDocker = true)
-internal class UserDeletedEventListenerIntegrationTest {
+internal class UserEventListenerIntegrationTest {
 
     @Autowired
     private lateinit var queueMessagingTemplate: QueueMessagingTemplate
@@ -32,7 +32,7 @@ internal class UserDeletedEventListenerIntegrationTest {
     @Test
     fun `should send an event to SQS then correctly consume it via UserDeletedEventListener instance`() {
         // Given
-        val event = UserDeletedEvent(userId = 1L)
+        val event = UserEvent.Deleted(userId = 1L)
 
         // When
         queueMessagingTemplate.convertAndSend(TEST_QUEUE_NAME, event)

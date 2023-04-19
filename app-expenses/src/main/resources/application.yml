@@ -53,7 +53,9 @@ application-props:
   retry-attempts: 5
   api-path-prefix: /api
   aws:
-    user-deleted-queue-name: ${AWS_QUEUE_NAME}
+    expense-updated-topic-name: ${AWS_SNS_EXPENSE_UPDATED_TOPIC}
+    expense-deleted-topic-name: ${AWS_SNS_EXPENSE_DELETED_TOPIC}
+    user-deleted-queue-name: ${AWS_SQS_USER_DELETED_QUEUE}
 
 cloud:
   aws:
@@ -63,7 +65,7 @@ cloud:
       access-key: ${AWS_ACCESS_KEY}
       secret-key: ${AWS_SECRET_KEY}
     sns:
-      enabled: false
+      enabled: true
     sqs:
       enabled: true
 
@@ -79,5 +81,7 @@ spring:
 
 cloud:
   aws:
+    sns:
+      endpoint: ${AWS_ENDPOINT}
     sqs:
       endpoint: ${AWS_ENDPOINT}

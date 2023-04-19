@@ -10,7 +10,7 @@ interface ExpenseService {
     fun getExpenseById(expenseId: Long): ExpenseResultDTO
     fun getExpenses(skipUids: List<Long>?, dateFrom: LocalDate?, dateTill: LocalDate?): Stream<ExpenseResultDTO>
     fun createExpense(dto: ExpenseCreateDTO): ExpenseResultDTO
-    fun updateExpense(expenseId: Long, dto: ExpenseUpdateDTO): ExpenseResultDTO
+    fun updateExpense(expenseId: Long, updateRequest: ExpenseUpdateDTO): ExpenseResultDTO
     fun deleteExpenseById(expenseId: Long)
     fun deleteUserExpenses(userId: Long)
 }

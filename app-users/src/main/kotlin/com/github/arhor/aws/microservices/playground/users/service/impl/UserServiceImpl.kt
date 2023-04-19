@@ -16,6 +16,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.properties.Delegates.observable
 
 @Service
 class UserServiceImpl(
@@ -35,7 +36,18 @@ class UserServiceImpl(
         }
         return userMapper.mapToUser(createRequest)
             .let { userRepository.save(it) }
-            .let(userMapper::mapToUserResponse)
+            .let(userMapper::mapEntityToResponseDTO)
+    }
+
+    class ObservableRef<T : Any>(initialValue: T) {
+        var changed: Boolean = false
+            private set
+
+        var value by observable(initialValue) { _, prev, next ->
+            if (prev != next) {
+                changed = true
+            }
+        }
     }
 
     @Retryable(
@@ -44,22 +56,30 @@ class UserServiceImpl(
     )
     @Transactional
     override fun updateUser(userId: Long, updateRequest: UserUpdateRequestDto): UserResponseDto {
-        var user = userRepository.findByIdOrNull(userId)
-            ?: throw EntityNotFoundException(
+        var changed = false
+        var user by observable(
+            initialValue = userRepository.findByIdOrNull(userId) ?: throw EntityNotFoundException(
                 entity = "User",
                 condition = "id = $userId",
                 operation = Operation.UPDATE,
-            )
-
+            ),
+            onChange = { _, prev, next ->
+                if (prev != next) {
+                    changed = true
+                }
+            }
+        )
         updateRequest.password?.let {
             user = user.copy(password = it)
         }
         updateRequest.budgetLimit?.let {
             user = user.copy(budget = user.budget.copy(limit = it))
         }
-
-        return userRepository.save(user)
-            .let(userMapper::mapToUserResponse)
+        if (changed) {
+            user = userRepository.save(user)
+            userEventEmitter.emit(UserEvent.Updated(userId))
+        }
+        return userMapper.mapEntityToResponseDTO(user)
     }
 
     @Transactional
@@ -82,12 +102,12 @@ class UserServiceImpl(
                 condition = "id = $userId",
                 operation = Operation.READ,
             )
-        return user.let(userMapper::mapToUserResponse)
+        return user.let(userMapper::mapEntityToResponseDTO)
     }
 
     override fun getAllUsers(): List<UserResponseDto> {
         return userRepository
             .findAll()
-            .map(userMapper::mapToUserResponse)
+            .map(userMapper::mapEntityToResponseDTO)
     }
 }

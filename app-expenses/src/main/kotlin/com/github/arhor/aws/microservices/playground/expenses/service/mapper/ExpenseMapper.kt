@@ -1,9 +1,11 @@
 package com.github.arhor.aws.microservices.playground.expenses.service.mapper
 
 import com.github.arhor.aws.microservices.playground.expenses.data.model.Expense
+import com.github.arhor.aws.microservices.playground.expenses.service.dto.ExpenseCreateDTO
 import com.github.arhor.aws.microservices.playground.expenses.service.dto.ExpenseResultDTO
 import org.mapstruct.InjectionStrategy
 import org.mapstruct.Mapper
+import org.mapstruct.Mapping
 import org.mapstruct.MappingConstants
 import org.mapstruct.ReportingPolicy
 
@@ -13,5 +15,8 @@ import org.mapstruct.ReportingPolicy
     unmappedTargetPolicy = ReportingPolicy.ERROR,
 )
 interface ExpenseMapper {
+    @Mapping(target = "id", ignore = true)
+    fun mapCreateExpenseDtoToEntity(dto: ExpenseCreateDTO): Expense
+
     fun mapExpenseToResultDto(expense: Expense): ExpenseResultDTO
 }

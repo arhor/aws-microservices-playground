@@ -131,7 +131,7 @@ internal class ExpenseRepositoryIntegrationTest {
         }).toList()
 
         // When
-        val deletedRowsNumber = expenseRepository.deleteByUserId(userIdToDelete)
+        val deletedRowsNumber = expenseRepository.deleteByUserIdReturningNumberRecordsAffected(userIdToDelete)
         val remainingExpenses = expenseRepository.findAll()
 
         // Then
