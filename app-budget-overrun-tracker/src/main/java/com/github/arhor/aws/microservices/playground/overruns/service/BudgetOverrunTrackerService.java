@@ -1,8 +1,10 @@
 package com.github.arhor.aws.microservices.playground.overruns.service;
 
-import java.io.IOException;
+import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 
 public interface BudgetOverrunTrackerService {
 
-    void findOverrunsAndSendNotifications() throws IOException, InterruptedException;
+    void findOverrunsAndSendNotifications();
+
+    void processSqsEvent(SQSEvent event);
 }

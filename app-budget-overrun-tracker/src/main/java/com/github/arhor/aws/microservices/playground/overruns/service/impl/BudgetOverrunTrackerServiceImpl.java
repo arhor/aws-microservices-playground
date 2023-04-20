@@ -4,6 +4,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest;
+import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.arhor.aws.microservices.playground.overruns.service.BudgetOverrunTrackerService;
@@ -30,7 +31,7 @@ public class BudgetOverrunTrackerServiceImpl implements BudgetOverrunTrackerServ
     private final DynamoDBMapper dynamoDBMapper;
 
     @Override
-    public void findOverrunsAndSendNotifications() throws IOException, InterruptedException {
+    public void findOverrunsAndSendNotifications() {
         // 1. remove outdated user records which were notified in previous months
         // 2. get the list of users which were already notified in this month
         // 3. ask expenses service to find users with budget overruns in the current month (excluding users from step 2)
@@ -50,5 +51,10 @@ public class BudgetOverrunTrackerServiceImpl implements BudgetOverrunTrackerServ
                 .withTableName("<TABLE_NAME>")
                 .withKey(Map.of("date", new AttributeValue().withS(LocalDate.now().toString())))
         );
+    }
+
+    @Override
+    public void processSqsEvent(final SQSEvent event) {
+
     }
 }

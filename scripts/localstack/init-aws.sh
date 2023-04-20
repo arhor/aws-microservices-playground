@@ -1,28 +1,38 @@
 #!/bin/bash
 
-########################################## all SNS topic declarations ##################################################
+############################################## Event: user created #####################################################
 
+# supplier: user-service
+awslocal sns create-topic --name user-created-events-topic --output table | cat
+
+# consumer: budget-overrun-tracker
+awslocal sqs create-queue --queue-name user-created-events-queue-1 --output table | cat
+
+# consumer: email-notifier
+awslocal sqs create-queue --queue-name user-created-events-queue-2 --output table | cat
+
+awslocal sns subscribe \
+    --topic-arn "arn:aws:sns:us-east-1:000000000000:user-created-events-topic" \
+    --protocol sqs \
+    --notification-endpoint "arn:aws:sqs:us-east-1:000000000000:user-created-events-queue-1" \
+    --output table | cat
+
+awslocal sns subscribe \
+    --topic-arn "arn:aws:sns:us-east-1:000000000000:user-created-events-topic" \
+    --protocol sqs \
+    --notification-endpoint "arn:aws:sqs:us-east-1:000000000000:user-created-events-queue-2" \
+    --output table | cat
+
+############################################## Event: user updated #####################################################
+
+# supplier: user-service
 awslocal sns create-topic --name user-updated-events-topic --output table | cat
-awslocal sns create-topic --name user-deleted-events-topic --output table | cat
 
-awslocal sns create-topic --name expense-updated-events-topic --output table | cat
-awslocal sns create-topic --name expense-deleted-events-topic --output table | cat
-
-########################################## all SQS queue declarations ##################################################
-
-# Supposed consumer: app-expenses
+# consumer: budget-overrun-tracker
 awslocal sqs create-queue --queue-name user-updated-events-queue-1 --output table | cat
 
-# Supposed consumer: app-budget-overrun-tracker
+# consumer: email-notifier
 awslocal sqs create-queue --queue-name user-updated-events-queue-2 --output table | cat
-
-# Supposed consumer: app-expenses
-awslocal sqs create-queue --queue-name user-deleted-events-queue-1 --output table | cat
-
-# Supposed consumer: app-budget-overrun-tracker
-awslocal sqs create-queue --queue-name user-deleted-events-queue-2 --output table | cat
-
-###################################### user-updated-events-topic subscriptions #########################################
 
 awslocal sns subscribe \
     --topic-arn "arn:aws:sns:us-east-1:000000000000:user-updated-events-topic" \
@@ -36,7 +46,19 @@ awslocal sns subscribe \
     --notification-endpoint "arn:aws:sqs:us-east-1:000000000000:user-updated-events-queue-2" \
     --output table | cat
 
-###################################### user-deleted-events-topic subscriptions #########################################
+############################################## Event: user deleted #####################################################
+
+# supplier: user-service
+awslocal sns create-topic --name user-deleted-events-topic --output table | cat
+
+# consumer: budget-overrun-tracker
+awslocal sqs create-queue --queue-name user-deleted-events-queue-1 --output table | cat
+
+# consumer: email-notifier
+awslocal sqs create-queue --queue-name user-deleted-events-queue-2 --output table | cat
+
+# consumer: expense-service
+awslocal sqs create-queue --queue-name user-deleted-events-queue-3 --output table | cat
 
 awslocal sns subscribe \
     --topic-arn "arn:aws:sns:us-east-1:000000000000:user-deleted-events-topic" \
@@ -48,4 +70,52 @@ awslocal sns subscribe \
     --topic-arn "arn:aws:sns:us-east-1:000000000000:user-deleted-events-topic" \
     --protocol sqs \
     --notification-endpoint "arn:aws:sqs:us-east-1:000000000000:user-deleted-events-queue-2" \
+    --output table | cat
+
+awslocal sns subscribe \
+    --topic-arn "arn:aws:sns:us-east-1:000000000000:user-deleted-events-topic" \
+    --protocol sqs \
+    --notification-endpoint "arn:aws:sqs:us-east-1:000000000000:user-deleted-events-queue-3" \
+    --output table | cat
+
+############################################ Event: expense created ####################################################
+
+# supplier: expense-service
+awslocal sns create-topic --name expense-created-events-topic --output table | cat
+
+# consumer: budget-overrun-tracker
+awslocal sqs create-queue --queue-name expense-created-events-queue-1 --output table | cat
+
+awslocal sns subscribe \
+    --topic-arn "arn:aws:sns:us-east-1:000000000000:expense-created-events-topic" \
+    --protocol sqs \
+    --notification-endpoint "arn:aws:sqs:us-east-1:000000000000:expense-created-events-queue-1" \
+    --output table | cat
+
+############################################ Event: expense updated ####################################################
+
+# supplier: expense-service
+awslocal sns create-topic --name expense-updated-events-topic --output table | cat
+
+# consumer: budget-overrun-tracker
+awslocal sqs create-queue --queue-name expense-updated-events-queue-1 --output table | cat
+
+awslocal sns subscribe \
+    --topic-arn "arn:aws:sns:us-east-1:000000000000:expense-updated-events-topic" \
+    --protocol sqs \
+    --notification-endpoint "arn:aws:sqs:us-east-1:000000000000:expense-updated-events-queue-1" \
+    --output table | cat
+
+############################################# Event: budget overrun ####################################################
+
+# supplier: budget-overrun-tracker
+awslocal sns create-topic --name budget-overrun-events-topic --output table | cat
+
+# consumer: email-notifier
+awslocal sqs create-queue --queue-name budget-overrun-events-queue-1 --output table | cat
+
+awslocal sns subscribe \
+    --topic-arn "arn:aws:sns:us-east-1:000000000000:budget-overrun-events-topic" \
+    --protocol sqs \
+    --notification-endpoint "arn:aws:sqs:us-east-1:000000000000:budget-overrun-events-queue-1" \
     --output table | cat
