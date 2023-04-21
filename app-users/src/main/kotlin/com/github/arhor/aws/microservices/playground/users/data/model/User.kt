@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Version
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Embedded
 import org.springframework.data.relational.core.mapping.Table
-import java.time.ZonedDateTime
+import java.time.LocalDateTime
 
 @Immutable
 @Table("users")
@@ -32,9 +32,9 @@ data class User(
 
     @CreatedDate
     @Column("created_date_time")
-    val createdDateTime: ZonedDateTime? = null,
+    val createdDateTime: LocalDateTime? = null,
 
     @LastModifiedDate
     @Column("updated_date_time")
-    val updatedDateTime: ZonedDateTime? = null,
+    val updatedDateTime: LocalDateTime? = null,
 )

@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.servlet.NoHandlerFoundException
 import java.lang.invoke.MethodHandles
-import java.time.ZonedDateTime
+import java.time.LocalDateTime
 import java.util.Locale
 import java.util.function.Supplier
 
 @RestControllerAdvice
 class GlobalExceptionHandler(
     private val messages: MessageSource,
-    private val currentDateTimeSupplier: Supplier<ZonedDateTime>,
+    private val currentDateTimeSupplier: Supplier<LocalDateTime>,
 ) {
     private val log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass())
 
