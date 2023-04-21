@@ -26,6 +26,7 @@ import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
+import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
@@ -54,6 +55,9 @@ internal class UserRepositoryIntegrationTest {
 
     @Autowired
     private lateinit var userRepository: UserRepository
+
+    @Autowired
+    private lateinit var jdbcTemplate: JdbcTemplate
 
     @MockkBean
     private lateinit var messenger: NotificationMessagingTemplate

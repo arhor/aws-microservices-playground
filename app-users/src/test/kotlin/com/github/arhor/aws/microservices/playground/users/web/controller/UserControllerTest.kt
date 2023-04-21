@@ -36,7 +36,11 @@ import java.math.BigDecimal
 @WebMvcTest(
     controllers = [
         UserController::class,
-    ]
+    ],
+    properties = [
+        "application-props.aws.user-updated-topic-name = STUB",
+        "application-props.aws.user-deleted-topic-name = STUB",
+    ],
 )
 internal class UserControllerTest {
 
