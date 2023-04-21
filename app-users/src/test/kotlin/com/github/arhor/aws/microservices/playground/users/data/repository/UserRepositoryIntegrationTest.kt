@@ -184,11 +184,8 @@ internal class UserRepositoryIntegrationTest {
             }
         }, generatedKeyHolder)
 
-        println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-        println(generatedKeyHolder.keyList)
-        println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-
-        return generatedKeyHolder.getKeyAs(Long::class.java)!!
+        return generatedKeyHolder.getKeyAs(Long::class.java)
+            ?: throw RuntimeException("${generatedKeyHolder.keyList}")
     }
 
     companion object {
