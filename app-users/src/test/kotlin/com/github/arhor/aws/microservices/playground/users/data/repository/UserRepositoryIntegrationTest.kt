@@ -34,6 +34,7 @@ import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import java.math.BigDecimal
+import java.time.LocalDateTime
 
 @Tag("integration")
 @DataJdbcTest(
@@ -70,18 +71,21 @@ internal class UserRepositoryIntegrationTest {
     @Test
     fun `should return true for the email of an existing user`() {
         // Given
-        val existingUser = userRepository.save(
-            User(
-                email = "test1@email.com",
-                password = "TestPassword123",
-                budget = Budget(
-                    limit = BigDecimal("10.00")
-                )
-            )
-        )
+        val query = """
+            INSERT INTO "users" (
+                "email",
+                "password",
+                "budget_limit",
+                "version",
+                "created_date_time"
+            ) VALUES (?, ?, ?, ?, ?);
+        """.trimIndent()
+        val args = arrayOf("test1@email.com", "TestPassword123", BigDecimal("10.00"), 1L, LocalDateTime.now())
+
+        jdbcTemplate.update(query, *args)
 
         // When
-        val result = userRepository.existsByEmail(existingUser.email)
+        val result = userRepository.existsByEmail("test1@email.com")
 
         // Then
         assertThat(result)
