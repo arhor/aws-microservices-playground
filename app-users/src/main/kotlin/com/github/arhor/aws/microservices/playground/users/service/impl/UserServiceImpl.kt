@@ -6,8 +6,6 @@ import com.github.arhor.aws.microservices.playground.users.service.UserService
 import com.github.arhor.aws.microservices.playground.users.service.dto.UserCreateRequestDto
 import com.github.arhor.aws.microservices.playground.users.service.dto.UserResponseDto
 import com.github.arhor.aws.microservices.playground.users.service.dto.UserUpdateRequestDto
-import com.github.arhor.aws.microservices.playground.users.service.event.UserEvent
-import com.github.arhor.aws.microservices.playground.users.service.event.UserEventEmitter
 import com.github.arhor.aws.microservices.playground.users.service.exception.EntityDuplicateException
 import com.github.arhor.aws.microservices.playground.users.service.exception.EntityNotFoundException
 import com.github.arhor.aws.microservices.playground.users.service.mapper.UserMapper
@@ -22,7 +20,6 @@ import kotlin.properties.Delegates.observable
 class UserServiceImpl(
     private val userMapper: UserMapper,
     private val userRepository: UserRepository,
-    private val userEventEmitter: UserEventEmitter,
 ) : UserService {
 
     @Transactional
@@ -37,17 +34,6 @@ class UserServiceImpl(
         return userMapper.mapToUser(createRequest)
             .let { userRepository.save(it) }
             .let(userMapper::mapEntityToResponseDTO)
-    }
-
-    class ObservableRef<T : Any>(initialValue: T) {
-        var changed: Boolean = false
-            private set
-
-        var value by observable(initialValue) { _, prev, next ->
-            if (prev != next) {
-                changed = true
-            }
-        }
     }
 
     @Retryable(
@@ -77,7 +63,6 @@ class UserServiceImpl(
         }
         if (changed) {
             user = userRepository.save(user)
-            userEventEmitter.emit(UserEvent.Updated(userId))
         }
         return userMapper.mapEntityToResponseDTO(user)
     }
@@ -92,7 +77,6 @@ class UserServiceImpl(
             )
         }
         userRepository.deleteById(userId)
-        userEventEmitter.emit(UserEvent.Deleted(userId))
     }
 
     override fun getUserById(userId: Long): UserResponseDto {

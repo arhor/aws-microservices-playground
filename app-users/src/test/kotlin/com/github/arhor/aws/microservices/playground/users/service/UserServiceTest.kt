@@ -6,8 +6,6 @@ import com.github.arhor.aws.microservices.playground.users.data.repository.UserR
 import com.github.arhor.aws.microservices.playground.users.service.dto.UserCreateRequestDto
 import com.github.arhor.aws.microservices.playground.users.service.dto.UserResponseDto
 import com.github.arhor.aws.microservices.playground.users.service.dto.UserUpdateRequestDto
-import com.github.arhor.aws.microservices.playground.users.service.event.UserEvent
-import com.github.arhor.aws.microservices.playground.users.service.event.UserEventEmitter
 import com.github.arhor.aws.microservices.playground.users.service.exception.EntityDuplicateException
 import com.github.arhor.aws.microservices.playground.users.service.exception.EntityNotFoundException
 import com.github.arhor.aws.microservices.playground.users.service.impl.UserServiceImpl
@@ -15,16 +13,13 @@ import com.github.arhor.aws.microservices.playground.users.service.mapper.UserMa
 import io.mockk.Call
 import io.mockk.MockKAnswerScope
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
-import io.mockk.runs
 import io.mockk.slot
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchException
 import org.assertj.core.api.Assertions.from
 import org.assertj.core.api.InstanceOfAssertFactories.throwable
-import org.assertj.core.api.InstanceOfAssertFactories.type
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
@@ -34,12 +29,10 @@ internal class UserServiceTest {
 
     private val userMapper: UserMapper = mockk()
     private val userRepository: UserRepository = mockk()
-    private val userEventEmitter: UserEventEmitter = mockk()
 
     private val userService: UserService = UserServiceImpl(
         userMapper,
         userRepository,
-        userEventEmitter,
     )
 
     @Nested
@@ -119,7 +112,6 @@ internal class UserServiceTest {
             val expectedEmail = "test@email.com"
             val expectedPassword = "UpdatedPassword123"
             val expectedBudgetLimit = BigDecimal("150.00")
-            val expectedUserEventType = UserEvent.Updated::class.java
 
             val initialBudgetLimit = BigDecimal("100.00")
             val initialPassword = "InitialPassword123"
@@ -132,11 +124,9 @@ internal class UserServiceTest {
             )
 
             val userOnSave = slot<User>()
-            val userEventOnSave = slot<UserEvent>()
 
             every { userRepository.findById(any()) } returns Optional.of(initialUser)
             every { userRepository.save(any()) } answers copyingUser()
-            every { userEventEmitter.emit(any()) } just runs
             every { userMapper.mapEntityToResponseDTO(any()) } answers convertingUserToDto()
 
             // When
@@ -151,7 +141,6 @@ internal class UserServiceTest {
             // Then
             verify(exactly = 1) { userRepository.findById(expectedId) }
             verify(exactly = 1) { userRepository.save(capture(userOnSave)) }
-            verify(exactly = 1) { userEventEmitter.emit(capture(userEventOnSave)) }
             verify(exactly = 1) { userMapper.mapEntityToResponseDTO(userOnSave.captured) }
 
             assertThat(result)
@@ -164,11 +153,6 @@ internal class UserServiceTest {
                 .returns(expectedEmail, from { it.email })
                 .returns(expectedPassword, from { it.password })
                 .returns(expectedBudgetLimit, from { it.budget.limit })
-
-            assertThat(userEventOnSave.captured)
-                .isInstanceOf(expectedUserEventType)
-                .asInstanceOf(type(expectedUserEventType))
-                .returns(expectedId, from { it.userId })
         }
 
         @Test
