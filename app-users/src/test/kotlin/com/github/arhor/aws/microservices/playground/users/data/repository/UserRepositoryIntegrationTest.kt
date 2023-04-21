@@ -184,8 +184,7 @@ internal class UserRepositoryIntegrationTest {
             }
         }, generatedKeyHolder)
 
-        return generatedKeyHolder.getKeyAs(Long::class.java)
-            ?: throw RuntimeException("${generatedKeyHolder.keyList}")
+        return generatedKeyHolder.key!!.toLong()
     }
 
     companion object {
