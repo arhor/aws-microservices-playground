@@ -27,7 +27,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
@@ -156,13 +155,12 @@ internal class UserRepositoryIntegrationTest {
 //            .returns(createdUser.budget.limit, from { it.budgetLimit })
 //    }
 
-    private fun createUserUsingJDBC(email: String, password: String, budgetLimit: BigDecimal): Long {
-        val generatedKeyHolder = GeneratedKeyHolder()
+    private fun createUserUsingJDBC(email: String, password: String, budgetLimit: BigDecimal) {
         val initialVersion = 1L
         val currentTimestamp = Timestamp.valueOf(LocalDateTime.now())
         var idx = 1
 
-        jdbcTemplate.update({
+        jdbcTemplate.update {
             it.prepareStatement(
                 """
                 INSERT INTO "users" (
@@ -182,9 +180,7 @@ internal class UserRepositoryIntegrationTest {
                  setTimestamp(idx++, currentTimestamp)
                 // @formatter:on
             }
-        }, generatedKeyHolder)
-
-        return generatedKeyHolder.key!!.toLong()
+        }
     }
 
     companion object {
