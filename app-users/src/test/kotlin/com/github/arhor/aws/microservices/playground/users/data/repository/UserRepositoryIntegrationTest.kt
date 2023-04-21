@@ -184,6 +184,10 @@ internal class UserRepositoryIntegrationTest {
             }
         }, generatedKeyHolder)
 
+        println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        println(generatedKeyHolder.keyList)
+        println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+
         return generatedKeyHolder.getKeyAs(Long::class.java)!!
     }
 
