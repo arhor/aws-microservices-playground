@@ -46,6 +46,7 @@ dependencies {
     kapt("org.springframework:spring-context-indexer")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
 
+    compileOnly("com.google.code.findbugs:jsr305")
     compileOnly("org.mapstruct:mapstruct")
 
     runtimeOnly("org.postgresql:postgresql")
