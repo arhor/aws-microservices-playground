@@ -26,7 +26,9 @@ import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
@@ -34,6 +36,7 @@ import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
 import java.math.BigDecimal
+import java.sql.Statement
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
@@ -106,7 +109,7 @@ internal class UserRepositoryIntegrationTest {
     }
 
     @Test
-    fun `should send UserStateChangedMessage$Updated message on User entity save`() {
+    fun `should send UserStateChangedMessage$Updated message on a new User entity save`() {
         // Given
         val newUser = User(
             email = "test2@email.com",
@@ -130,48 +133,82 @@ internal class UserRepositoryIntegrationTest {
             .returns(createdUser.budget.limit, from { it.budgetLimit })
     }
 
-//    @Test
-//    fun `should send UserStateChangedMessage$Deleted message on User entity delete`() {
-//        // Given
-//        val newUser = User(
-//            email = "test2@email.com",
-//            password = "TestPassword123",
-//            budget = Budget(
-//                limit = BigDecimal("10.00")
-//            )
-//        )
-//        val slot = slot<UserStateChangedMessage>()
-//
-//        // When
-//        val createdUser = userRepository.save(newUser)
-//
-//        // Then
-//        verify(exactly = 1) { messenger.convertAndSend(USER_UPDATED_TEST_TOPIC, capture(slot)) }
-//
-//        assertThat(slot.captured)
-//            .asInstanceOf(type(UserStateChangedMessage.Updated::class.java))
-//            .returns(createdUser.id, from { it.userId })
-//            .returns(createdUser.email, from { it.email })
-//            .returns(createdUser.budget.limit, from { it.budgetLimit })
-//    }
+    @Test
+    fun `should send UserStateChangedMessage$Updated message on an existing User entity save`() {
+        // Given
+        val userId = createUserUsingJDBC(
+            email = "test1@email.com",
+            password = "TestPassword123",
+            budgetLimit = BigDecimal("10.00")
+        )
+        val existingUser = userRepository.findByIdOrNull(userId)!!
+        val slot = slot<UserStateChangedMessage>()
 
-    private fun createUserUsingJDBC(email: String, password: String, budgetLimit: BigDecimal) {
+        // When
+        val updatedUser = userRepository.save(existingUser.copy(password = "UpdatedPassword123"))
+
+        // Then
+        verify(exactly = 1) { messenger.convertAndSend(USER_UPDATED_TEST_TOPIC, capture(slot)) }
+
+        assertThat(slot.captured)
+            .asInstanceOf(type(UserStateChangedMessage.Updated::class.java))
+            .returns(updatedUser.id, from { it.userId })
+            .returns(updatedUser.email, from { it.email })
+            .returns(updatedUser.budget.limit, from { it.budgetLimit })
+    }
+
+    @Test
+    fun `should send UserStateChangedMessage$Deleted message on User entity delete`() {
+        // Given
+        val userId = createUserUsingJDBC(
+            email = "test1@email.com",
+            password = "TestPassword123",
+            budgetLimit = BigDecimal("10.00")
+        )
+        val existingUser = userRepository.findByIdOrNull(userId)!!
+        val slot = slot<UserStateChangedMessage>()
+
+        // When
+        userRepository.delete(existingUser)
+
+        // Then
+        verify(exactly = 1) { messenger.convertAndSend(USER_DELETED_TEST_TOPIC, capture(slot)) }
+
+        assertThat(slot.captured)
+            .asInstanceOf(type(UserStateChangedMessage.Deleted::class.java))
+            .returns(userId, from { it.userId })
+    }
+
+    @Test
+    fun `should send UserStateChangedMessage$Deleted message on User entity delete by id`() {
+        // Given
+        val userId = createUserUsingJDBC(
+            email = "test1@email.com",
+            password = "TestPassword123",
+            budgetLimit = BigDecimal("10.00")
+        )
+        val slot = slot<UserStateChangedMessage>()
+
+        // When
+        userRepository.deleteById(userId)
+
+        // Then
+        verify(exactly = 1) { messenger.convertAndSend(USER_DELETED_TEST_TOPIC, capture(slot)) }
+
+        assertThat(slot.captured)
+            .asInstanceOf(type(UserStateChangedMessage.Deleted::class.java))
+            .returns(userId, from { it.userId })
+    }
+
+    @Suppress("UNUSED_CHANGED_VALUE")
+    private fun createUserUsingJDBC(email: String, password: String, budgetLimit: BigDecimal): Long {
         val initialVersion = 1L
         val currentTimestamp = Timestamp.valueOf(LocalDateTime.now())
-        var idx = 1
+        val generatedKeyHolder = GeneratedKeyHolder()
 
-        jdbcTemplate.update {
-            it.prepareStatement(
-                """
-                INSERT INTO "users" (
-                    "email",
-                    "password",
-                    "budget_limit",
-                    "version",
-                    "created_date_time"
-                ) VALUES (?, ?, ?, ?, ?);
-                """.trimIndent()
-            ).apply {
+        jdbcTemplate.update({
+            it.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS).apply {
+                var idx = 1
                 // @formatter:off
                     setString(idx++, email)
                     setString(idx++, password)
@@ -180,12 +217,25 @@ internal class UserRepositoryIntegrationTest {
                  setTimestamp(idx++, currentTimestamp)
                 // @formatter:on
             }
-        }
+        }, generatedKeyHolder)
+
+        return generatedKeyHolder.keys!!["id"] as Long
     }
 
     companion object {
         private const val USER_UPDATED_TEST_TOPIC = "user-updated-test-topic"
         private const val USER_DELETED_TEST_TOPIC = "user-deleted-test-topic"
+
+        /* language=SQL */
+        private val INSERT_QUERY = """
+            INSERT INTO "users" (
+                "email",
+                "password",
+                "budget_limit",
+                "version",
+                "created_date_time"
+            ) VALUES (?, ?, ?, ?, ?);
+        """.trimIndent()
 
         @JvmStatic
         @Container
