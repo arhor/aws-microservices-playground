@@ -16,6 +16,9 @@ import org.mapstruct.ReportingPolicy
 )
 interface ExpenseMapper {
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "version", ignore = true)
+    @Mapping(target = "createdDateTime", ignore = true)
+    @Mapping(target = "updatedDateTime", ignore = true)
     fun mapCreateExpenseDtoToEntity(dto: ExpenseCreateDTO): Expense
 
     fun mapExpenseToResultDto(expense: Expense): ExpenseResultDTO

@@ -3,8 +3,10 @@ package com.github.arhor.aws.microservices.playground.expenses.web.listener
 import com.github.arhor.aws.microservices.playground.expenses.service.ExpenseService
 import com.ninjasquad.springmockk.MockkBean
 import io.awspring.cloud.messaging.core.QueueMessagingTemplate
+import io.awspring.cloud.messaging.listener.SimpleMessageListenerContainer
 import io.awspring.cloud.test.sqs.SqsTest
 import io.mockk.verify
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -61,8 +63,14 @@ internal class UserEventListenerIntegrationTest {
 
         @JvmStatic
         @BeforeAll
-        fun beforeAll() {
+        fun setUpClass() {
             localstack.execInContainer("awslocal", "sqs", "create-queue", "--queue-name", TEST_QUEUE_NAME)
+        }
+
+        @JvmStatic
+        @AfterAll
+        fun tearDownClass(@Autowired messageListenerContainer: SimpleMessageListenerContainer) {
+            messageListenerContainer.stop()
         }
     }
 }

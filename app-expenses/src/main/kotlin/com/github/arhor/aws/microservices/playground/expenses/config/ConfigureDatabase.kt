@@ -7,9 +7,7 @@ import org.springframework.data.auditing.DateTimeProvider
 import org.springframework.data.jdbc.repository.config.EnableJdbcAuditing
 import org.springframework.data.jdbc.repository.config.EnableJdbcRepositories
 import org.springframework.transaction.annotation.EnableTransactionManagement
-import java.time.Clock
-import java.time.ZonedDateTime
-import java.time.temporal.ChronoUnit
+import java.time.LocalDateTime
 import java.util.Optional
 import java.util.function.Supplier
 
@@ -20,15 +18,7 @@ import java.util.function.Supplier
 class ConfigureDatabase {
 
     @Bean
-    fun currentDateTimeSupplier() = Supplier {
-        val systemUTC = Clock.systemUTC()
-        val timestamp = ZonedDateTime.now(systemUTC)
-
-        timestamp.truncatedTo(ChronoUnit.MILLIS)
-    }
-
-    @Bean
-    fun currentDateTimeProvider(currentDateTimeSupplier: Supplier<ZonedDateTime>) = DateTimeProvider {
+    fun currentDateTimeProvider(currentDateTimeSupplier: Supplier<LocalDateTime>) = DateTimeProvider {
         Optional.of(currentDateTimeSupplier.get())
     }
 

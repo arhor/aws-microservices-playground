@@ -118,15 +118,15 @@ internal class UserRepositoryIntegrationTest {
                 limit = BigDecimal("10.00")
             )
         )
-        val slot = slot<UserStateChangedMessage>()
+        val stateChangedMessage = slot<UserStateChangedMessage>()
 
         // When
         val createdUser = userRepository.save(newUser)
 
         // Then
-        verify(exactly = 1) { messenger.convertAndSend(USER_UPDATED_TEST_TOPIC, capture(slot)) }
+        verify(exactly = 1) { messenger.convertAndSend(USER_UPDATED_TEST_TOPIC, capture(stateChangedMessage)) }
 
-        assertThat(slot.captured)
+        assertThat(stateChangedMessage.captured)
             .asInstanceOf(type(UserStateChangedMessage.Updated::class.java))
             .returns(createdUser.id, from { it.userId })
             .returns(createdUser.email, from { it.email })
@@ -142,15 +142,15 @@ internal class UserRepositoryIntegrationTest {
             budgetLimit = BigDecimal("10.00")
         )
         val existingUser = userRepository.findByIdOrNull(userId)!!
-        val slot = slot<UserStateChangedMessage>()
+        val stateChangedMessage = slot<UserStateChangedMessage>()
 
         // When
         val updatedUser = userRepository.save(existingUser.copy(password = "UpdatedPassword123"))
 
         // Then
-        verify(exactly = 1) { messenger.convertAndSend(USER_UPDATED_TEST_TOPIC, capture(slot)) }
+        verify(exactly = 1) { messenger.convertAndSend(USER_UPDATED_TEST_TOPIC, capture(stateChangedMessage)) }
 
-        assertThat(slot.captured)
+        assertThat(stateChangedMessage.captured)
             .asInstanceOf(type(UserStateChangedMessage.Updated::class.java))
             .returns(updatedUser.id, from { it.userId })
             .returns(updatedUser.email, from { it.email })
@@ -166,15 +166,15 @@ internal class UserRepositoryIntegrationTest {
             budgetLimit = BigDecimal("10.00")
         )
         val existingUser = userRepository.findByIdOrNull(userId)!!
-        val slot = slot<UserStateChangedMessage>()
+        val stateChangedMessage = slot<UserStateChangedMessage>()
 
         // When
         userRepository.delete(existingUser)
 
         // Then
-        verify(exactly = 1) { messenger.convertAndSend(USER_DELETED_TEST_TOPIC, capture(slot)) }
+        verify(exactly = 1) { messenger.convertAndSend(USER_DELETED_TEST_TOPIC, capture(stateChangedMessage)) }
 
-        assertThat(slot.captured)
+        assertThat(stateChangedMessage.captured)
             .asInstanceOf(type(UserStateChangedMessage.Deleted::class.java))
             .returns(userId, from { it.userId })
     }
@@ -187,15 +187,15 @@ internal class UserRepositoryIntegrationTest {
             password = "TestPassword123",
             budgetLimit = BigDecimal("10.00")
         )
-        val slot = slot<UserStateChangedMessage>()
+        val stateChangedMessage = slot<UserStateChangedMessage>()
 
         // When
         userRepository.deleteById(userId)
 
         // Then
-        verify(exactly = 1) { messenger.convertAndSend(USER_DELETED_TEST_TOPIC, capture(slot)) }
+        verify(exactly = 1) { messenger.convertAndSend(USER_DELETED_TEST_TOPIC, capture(stateChangedMessage)) }
 
-        assertThat(slot.captured)
+        assertThat(stateChangedMessage.captured)
             .asInstanceOf(type(UserStateChangedMessage.Deleted::class.java))
             .returns(userId, from { it.userId })
     }
