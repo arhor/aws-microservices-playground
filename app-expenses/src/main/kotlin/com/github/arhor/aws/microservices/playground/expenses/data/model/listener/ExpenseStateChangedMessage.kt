@@ -8,5 +8,6 @@ sealed interface ExpenseStateChangedMessage {
     data class Updated(val expenseId: Long, val date: LocalDate, val amount: BigDecimal, val userId: Long) :
         ExpenseStateChangedMessage
 
-    data class Deleted(val expenseId: Long)
+    data class Deleted(val expenseId: Long) :
+        ExpenseStateChangedMessage
 }
