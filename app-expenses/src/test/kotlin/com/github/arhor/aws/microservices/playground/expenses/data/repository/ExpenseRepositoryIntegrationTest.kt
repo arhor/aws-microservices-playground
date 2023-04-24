@@ -244,13 +244,17 @@ internal class ExpenseRepositoryIntegrationTest {
             userId = 1L,
         )
         val existingExpense = expenseRepository.findByIdOrNull(expenseId)!!
+        val destinationTopic = slot<String>()
         val stateChangedMessage = slot<ExpenseStateChangedMessage>()
 
         // When
         expenseRepository.delete(existingExpense)
 
         // Then
-        verify(exactly = 1) { messenger.convertAndSend(EXPENSE_DELETED_TEST_TOPIC, capture(stateChangedMessage)) }
+        verify(exactly = 1) { messenger.convertAndSend(capture(destinationTopic), capture(stateChangedMessage)) }
+
+        assertThat(destinationTopic.captured)
+            .isEqualTo(EXPENSE_DELETED_TEST_TOPIC)
 
         assertThat(stateChangedMessage.captured)
             .asInstanceOf(InstanceOfAssertFactories.type(ExpenseStateChangedMessage.Deleted::class.java))
@@ -265,13 +269,17 @@ internal class ExpenseRepositoryIntegrationTest {
             amount = BigDecimal("10.00"),
             userId = 1L,
         )
+        val destinationTopic = slot<String>()
         val stateChangedMessage = slot<ExpenseStateChangedMessage>()
 
         // When
         expenseRepository.deleteById(expenseId)
 
         // Then
-        verify(exactly = 1) { messenger.convertAndSend(EXPENSE_DELETED_TEST_TOPIC, capture(stateChangedMessage)) }
+        verify(exactly = 1) { messenger.convertAndSend(capture(destinationTopic), capture(stateChangedMessage)) }
+
+        assertThat(destinationTopic.captured)
+            .isEqualTo(EXPENSE_DELETED_TEST_TOPIC)
 
         assertThat(stateChangedMessage.captured)
             .asInstanceOf(InstanceOfAssertFactories.type(ExpenseStateChangedMessage.Deleted::class.java))
@@ -299,7 +307,6 @@ internal class ExpenseRepositoryIntegrationTest {
 
         return generatedKeyHolder.keys!!["id"] as Long
     }
-    //-------------------------------------------------------------------------------------------
 
     companion object {
         private const val EXPENSE_UPDATED_TEST_TOPIC = "expense-updated-test-topic"
