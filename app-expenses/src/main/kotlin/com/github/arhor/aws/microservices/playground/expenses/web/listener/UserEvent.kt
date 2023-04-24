@@ -1,4 +1,4 @@
-package com.github.arhor.aws.microservices.playground.expenses.service.event
+package com.github.arhor.aws.microservices.playground.expenses.web.listener
 
 sealed interface UserEvent {
 

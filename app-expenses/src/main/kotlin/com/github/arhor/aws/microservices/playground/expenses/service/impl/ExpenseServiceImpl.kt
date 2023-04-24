@@ -6,8 +6,6 @@ import com.github.arhor.aws.microservices.playground.expenses.service.ExpenseSer
 import com.github.arhor.aws.microservices.playground.expenses.service.dto.ExpenseCreateDTO
 import com.github.arhor.aws.microservices.playground.expenses.service.dto.ExpenseResultDTO
 import com.github.arhor.aws.microservices.playground.expenses.service.dto.ExpenseUpdateDTO
-import com.github.arhor.aws.microservices.playground.expenses.service.event.ExpenseEvent
-import com.github.arhor.aws.microservices.playground.expenses.service.event.ExpenseEventEmitter
 import com.github.arhor.aws.microservices.playground.expenses.service.exception.EntityNotFoundException
 import com.github.arhor.aws.microservices.playground.expenses.service.mapper.ExpenseMapper
 import org.slf4j.LoggerFactory
@@ -23,7 +21,6 @@ import java.util.stream.Stream
 class ExpenseServiceImpl(
     private val expenseMapper: ExpenseMapper,
     private val expenseRepository: ExpenseRepository,
-    private val expenseEventEmitter: ExpenseEventEmitter,
 ) : ExpenseService {
 
     override fun getExpenseById(expenseId: Long): ExpenseResultDTO {
@@ -68,7 +65,6 @@ class ExpenseServiceImpl(
     )
     @Transactional
     override fun updateExpense(expenseId: Long, updateRequest: ExpenseUpdateDTO): ExpenseResultDTO {
-        // emit event to the queue since budget overrun may be not relevant after expense update
         var expense = expenseRepository.findByIdOrNull(expenseId)
             ?: throw EntityNotFoundException(
                 entity = "Expense",
@@ -92,7 +88,6 @@ class ExpenseServiceImpl(
 
         if (hasChanges) {
             expense = expenseRepository.save(expense)
-            expenseEventEmitter.emit(ExpenseEvent.Updated(expenseId))
         }
 
         return expenseMapper.mapExpenseToResultDto(expense)
@@ -102,7 +97,6 @@ class ExpenseServiceImpl(
     override fun deleteExpenseById(expenseId: Long) {
         if (expenseRepository.existsById(expenseId)) {
             expenseRepository.deleteById(expenseId)
-            expenseEventEmitter.emit(ExpenseEvent.Deleted(expenseId))
         } else {
             throw EntityNotFoundException(
                 entity = "Expense",

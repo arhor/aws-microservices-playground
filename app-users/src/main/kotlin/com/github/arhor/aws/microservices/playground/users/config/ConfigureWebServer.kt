@@ -10,10 +10,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(ApplicationProps::class)
-class ConfigureWebServer(private val applicationProps: ApplicationProps) : WebMvcConfigurer {
+class ConfigureWebServer(private val appProps: ApplicationProps) : WebMvcConfigurer {
 
     override fun configurePathMatch(configurer: PathMatchConfigurer) {
-        applicationProps.apiPathPrefix?.let { configurer.addPathPrefix(it, classesAnnotatedWith<RestController>()) }
+        appProps.apiPathPrefix?.let { configurer.addPathPrefix(it, classesAnnotatedWith<RestController>()) }
     }
 
     companion object {

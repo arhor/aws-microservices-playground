@@ -1,7 +1,6 @@
 package com.github.arhor.aws.microservices.playground.expenses.web.listener
 
 import com.github.arhor.aws.microservices.playground.expenses.service.ExpenseService
-import com.github.arhor.aws.microservices.playground.expenses.service.event.UserEvent
 import com.ninjasquad.springmockk.MockkBean
 import io.awspring.cloud.messaging.core.QueueMessagingTemplate
 import io.awspring.cloud.test.sqs.SqsTest

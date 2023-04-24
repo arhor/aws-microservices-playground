@@ -1,7 +1,6 @@
 package com.github.arhor.aws.microservices.playground.expenses.web.listener
 
 import com.github.arhor.aws.microservices.playground.expenses.service.ExpenseService
-import com.github.arhor.aws.microservices.playground.expenses.service.event.UserEvent
 import io.awspring.cloud.messaging.listener.SqsMessageDeletionPolicy
 import io.awspring.cloud.messaging.listener.annotation.SqsListener
 import org.slf4j.LoggerFactory

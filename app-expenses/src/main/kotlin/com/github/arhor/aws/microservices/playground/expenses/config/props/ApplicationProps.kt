@@ -5,6 +5,12 @@ import org.springframework.boot.context.properties.ConstructorBinding
 
 @ConfigurationProperties("application-props")
 data class ApplicationProps @ConstructorBinding constructor(
-    val apiPathPrefix: String,
-    val retryAttempts: Int,
-)
+    val apiPathPrefix: String?,
+    val aws: Aws,
+) {
+
+    data class Aws(
+        val expenseUpdatedTopicName: String,
+        val expenseDeletedTopicName: String,
+    )
+}
