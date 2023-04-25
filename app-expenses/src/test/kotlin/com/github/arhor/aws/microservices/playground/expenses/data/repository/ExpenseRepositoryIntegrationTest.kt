@@ -322,7 +322,7 @@ internal class ExpenseRepositoryIntegrationTest {
         @JvmStatic
         @DynamicPropertySource
         fun registerDynamicProperties(registry: DynamicPropertyRegistry) {
-            registry.run {
+            with(registry) {
                 add("spring.datasource.url", db::getJdbcUrl)
                 add("spring.datasource.username", db::getUsername)
                 add("spring.datasource.password", db::getPassword)

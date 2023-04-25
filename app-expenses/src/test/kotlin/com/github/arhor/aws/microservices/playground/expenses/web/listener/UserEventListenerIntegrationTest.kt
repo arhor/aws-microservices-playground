@@ -54,11 +54,13 @@ internal class UserEventListenerIntegrationTest {
         @JvmStatic
         @DynamicPropertySource
         fun registerDynamicProperties(registry: DynamicPropertyRegistry) {
-            registry.add("cloud.aws.region.static") { localstack.region }
-            registry.add("cloud.aws.credentials.access-key") { localstack.accessKey }
-            registry.add("cloud.aws.credentials.secret-key") { localstack.secretKey }
-            registry.add("cloud.aws.sqs.endpoint") { localstack.getEndpointOverride(SQS) }
-            registry.add("application-props.aws.user-deleted-queue-name") { TEST_QUEUE_NAME }
+            with(registry) {
+                add("cloud.aws.region.static") { localstack.region }
+                add("cloud.aws.credentials.access-key") { localstack.accessKey }
+                add("cloud.aws.credentials.secret-key") { localstack.secretKey }
+                add("cloud.aws.sqs.endpoint") { localstack.getEndpointOverride(SQS) }
+                add("application-props.aws.user-deleted-queue-name") { TEST_QUEUE_NAME }
+            }
         }
 
         @JvmStatic
