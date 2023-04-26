@@ -60,6 +60,20 @@ awslocal sns subscribe \
     --notification-endpoint "arn:aws:sqs:us-east-1:000000000000:expense-updated-events-queue-1" \
     --output table | cat
 
+############################################ Event: expense deleted ####################################################
+
+# supplier: expense-service
+awslocal sns create-topic --name expense-deleted-events-topic --output table | cat
+
+# consumer: budget-overrun-tracker
+awslocal sqs create-queue --queue-name expense-deleted-events-queue-1 --output table | cat
+
+awslocal sns subscribe \
+    --topic-arn "arn:aws:sns:us-east-1:000000000000:expense-deleted-events-topic" \
+    --protocol sqs \
+    --notification-endpoint "arn:aws:sqs:us-east-1:000000000000:expense-deleted-events-queue-1" \
+    --output table | cat
+
 ############################################# Event: budget overrun ####################################################
 
 # supplier: budget-overrun-tracker
