@@ -8,10 +8,19 @@ awslocal sns create-topic --name user-updated-events-topic --output table | cat
 # consumer: budget-overrun-tracker
 awslocal sqs create-queue --queue-name user-updated-events-queue-1 --output table | cat
 
+# consumer: email-notifier
+awslocal sqs create-queue --queue-name user-updated-events-queue-2 --output table | cat
+
 awslocal sns subscribe \
     --topic-arn "arn:aws:sns:us-east-1:000000000000:user-updated-events-topic" \
     --protocol sqs \
     --notification-endpoint "arn:aws:sqs:us-east-1:000000000000:user-updated-events-queue-1" \
+    --output table | cat
+
+awslocal sns subscribe \
+    --topic-arn "arn:aws:sns:us-east-1:000000000000:user-updated-events-topic" \
+    --protocol sqs \
+    --notification-endpoint "arn:aws:sqs:us-east-1:000000000000:user-updated-events-queue-2" \
     --output table | cat
 
 ############################################## Event: user deleted #####################################################
