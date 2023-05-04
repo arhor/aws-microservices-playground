@@ -8,7 +8,10 @@ import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
-import java.net.http.HttpClient;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.function.Supplier;
 
 /**
  * Declares provider methods, which return instantiated and preconfigured objects.
@@ -24,8 +27,18 @@ abstract class Module_Provider {
 
     @Provides
     @Singleton
-    static HttpClient httpClient() {
-        return HttpClient.newHttpClient();
+    static Supplier<Connection> dbConnectionSource() throws SQLException {
+        final var dbUrl = System.getenv("JDBC_DATABASE_URL");
+        final var dbUsername = System.getenv("JDBC_DATABASE_USERNAME");
+        final var dbPassword = System.getenv("JDBC_DATABASE_PASSWORD");
+
+        return () -> {
+            try {
+                return DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        };
     }
 
     @Provides

@@ -50,7 +50,7 @@ public class UserEmailSenderImpl implements UserEmailSender {
     private final StringInterpolator interpolator;
 
     @Override
-    public void sendOverrunNotification(final String email, final String limit, final String value) {
+    public void sendOverrunNotification(final String email, final double limit, final double value) {
         final var mappings = Map.of(
             ARG_LIMIT, limit,
             ARG_VALUE, value

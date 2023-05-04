@@ -3,7 +3,7 @@ package com.github.arhor.aws.microservices.playground.notifications;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.events.SQSBatchResponse;
 import com.amazonaws.services.lambda.runtime.events.SQSBatchResponse.BatchItemFailure;
-import com.github.arhor.aws.microservices.playground.notifications.service.SQSMessageProcessorService;
+import com.github.arhor.aws.microservices.playground.notifications.service.SQSMessageProcessor;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -22,10 +22,10 @@ import static org.mockito.Mockito.mock;
 class SQSEventHandlerTest {
 
     private final Context context = mock(Context.class);
-    private final SQSMessageProcessorService sqsMessageProcessorService = mock(SQSMessageProcessorService.class);
+    private final SQSMessageProcessor sqsMessageProcessor = mock(SQSMessageProcessor.class);
 
     private final SQSEventHandler sqsEventHandler = new SQSEventHandler(
-        sqsMessageProcessorService
+        sqsMessageProcessor
     );
 
     @Test
@@ -43,14 +43,14 @@ class SQSEventHandlerTest {
         final var sqsEvent = createSQSEvent(sqsMessage);
 
         doNothing()
-            .when(sqsMessageProcessorService)
+            .when(sqsMessageProcessor)
             .process(any());
 
         // When
         var sqsBatchResponse = sqsEventHandler.handleRequest(sqsEvent, context);
 
         // Then
-        then(sqsMessageProcessorService)
+        then(sqsMessageProcessor)
             .should()
             .process(sqsMessage);
 
@@ -89,22 +89,22 @@ class SQSEventHandlerTest {
         final var expectedFailures = List.of(new BatchItemFailure(messageId2));
 
         doNothing()
-            .when(sqsMessageProcessorService)
+            .when(sqsMessageProcessor)
             .process(sqsMessage1);
 
         doThrow(RuntimeException.class)
-            .when(sqsMessageProcessorService)
+            .when(sqsMessageProcessor)
             .process(sqsMessage2);
 
         // When
         var sqsBatchResponse = sqsEventHandler.handleRequest(sqsEvent, context);
 
         // Then
-        then(sqsMessageProcessorService)
+        then(sqsMessageProcessor)
             .should()
             .process(sqsMessage1);
 
-        then(sqsMessageProcessorService)
+        then(sqsMessageProcessor)
             .should()
             .process(sqsMessage2);
 

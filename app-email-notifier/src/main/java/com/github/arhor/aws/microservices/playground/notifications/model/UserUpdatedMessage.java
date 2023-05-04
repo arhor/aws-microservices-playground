@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
-    private Long id;
+public class UserUpdatedMessage {
+    private Long userId;
     private String email;
     private double budgetLimit;
 }

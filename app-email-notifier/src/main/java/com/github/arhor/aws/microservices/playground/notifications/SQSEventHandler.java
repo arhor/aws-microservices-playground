@@ -5,7 +5,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SQSBatchResponse;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import com.github.arhor.aws.microservices.playground.notifications.config.DaggerServiceFactory;
-import com.github.arhor.aws.microservices.playground.notifications.service.SQSMessageProcessorService;
+import com.github.arhor.aws.microservices.playground.notifications.service.SQSMessageProcessor;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,9 @@ import java.util.ArrayList;
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class SQSEventHandler implements RequestHandler<SQSEvent, SQSBatchResponse> {
 
-    private final SQSMessageProcessorService sqsMessageProcessorService;
+    private static final String LOG_MESSAGE_TEMPLATE = "Processing of the SQS message with id = [{}] - {}";
+
+    private final SQSMessageProcessor sqsMessageProcessor;
 
     public SQSEventHandler() {
         this(DaggerServiceFactory.create().sqsMessageProcessorService());
@@ -29,12 +31,12 @@ public class SQSEventHandler implements RequestHandler<SQSEvent, SQSBatchRespons
 
         for (final var message : event.getRecords()) {
             final var messageId = message.getMessageId();
-            log.debug("Processing of the SQS message with id = [{}] - START", messageId);
+            log.debug(LOG_MESSAGE_TEMPLATE, messageId, "START");
             try {
-                sqsMessageProcessorService.process(message);
-                log.debug("Processing of the SQS message with id = [{}] - SUCCESS", messageId);
+                sqsMessageProcessor.process(message);
+                log.debug(LOG_MESSAGE_TEMPLATE, messageId, "SUCCESS");
             } catch (final Exception e) {
-                log.error("Processing of the SQS message with id = [{}] - FAILURE", messageId, e);
+                log.error(LOG_MESSAGE_TEMPLATE, messageId, "FAILURE", e);
                 errors.add(new SQSBatchResponse.BatchItemFailure(messageId));
             }
         }

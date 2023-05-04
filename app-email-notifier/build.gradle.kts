@@ -23,6 +23,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
 
     runtimeOnly("com.amazonaws:aws-lambda-java-log4j2")
+    runtimeOnly("org.postgresql:postgresql:42.6.0")
 
     implementation(platform(rootProject))
     implementation("com.amazonaws:aws-java-sdk-ses")

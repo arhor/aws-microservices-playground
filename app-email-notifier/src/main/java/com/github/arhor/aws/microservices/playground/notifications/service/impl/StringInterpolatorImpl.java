@@ -13,7 +13,7 @@ import java.util.Map;
 public class StringInterpolatorImpl implements StringInterpolator {
 
     @Override
-    public String interpolate(final String template, final Map<String, String> mappings) {
+    public String interpolate(final String template, final Map<String, ?> mappings) {
         final var substitutor =
             new StringSubstitutor(mappings)
                 .setEnableUndefinedVariableException(true)
