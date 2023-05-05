@@ -23,7 +23,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
 
     runtimeOnly("com.amazonaws:aws-lambda-java-log4j2")
-    runtimeOnly("org.postgresql:postgresql:42.6.0")
+    runtimeOnly("org.postgresql:postgresql:42.3.8")
 
     implementation(platform(rootProject))
     implementation("com.amazonaws:aws-java-sdk-ses")
@@ -35,6 +35,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-api")
     implementation("org.apache.logging.log4j:log4j-core")
     implementation("org.apache.logging.log4j:log4j-slf4j2-impl")
+    implementation("com.zaxxer:HikariCP:4.0.3")
 
     testAnnotationProcessor(platform(rootProject))
     testAnnotationProcessor("org.projectlombok:lombok")
