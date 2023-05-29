@@ -1,4 +1,4 @@
-package com.github.arhor.aws.microservices.playground.users.data.model.listener
+package com.github.arhor.aws.microservices.playground.users.data
 
 import java.math.BigDecimal
 

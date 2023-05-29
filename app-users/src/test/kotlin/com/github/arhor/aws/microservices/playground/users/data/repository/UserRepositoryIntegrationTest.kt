@@ -5,8 +5,8 @@ import com.github.arhor.aws.microservices.playground.users.config.ConfigureDatab
 import com.github.arhor.aws.microservices.playground.users.config.props.ApplicationProps
 import com.github.arhor.aws.microservices.playground.users.data.model.Budget
 import com.github.arhor.aws.microservices.playground.users.data.model.User
-import com.github.arhor.aws.microservices.playground.users.data.model.listener.UserStateChangedEventListener
-import com.github.arhor.aws.microservices.playground.users.data.model.listener.UserStateChangedMessage
+import com.github.arhor.aws.microservices.playground.users.data.UserStateChangedEventListener
+import com.github.arhor.aws.microservices.playground.users.data.UserStateChangedMessage
 import com.ninjasquad.springmockk.MockkBean
 import io.awspring.cloud.messaging.core.NotificationMessagingTemplate
 import io.mockk.every

@@ -1,4 +1,4 @@
-package com.github.arhor.aws.microservices.playground.users.data.model.listener
+package com.github.arhor.aws.microservices.playground.users.data
 
 import com.github.arhor.aws.microservices.playground.users.config.props.ApplicationProps
 import com.github.arhor.aws.microservices.playground.users.data.model.User
