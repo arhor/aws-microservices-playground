@@ -1,3 +1,7 @@
+The STAR framework is a structured method for answering behavioural interview questions, which are questions that ask
+you to provide specific examples of past experiences to demonstrate your skills and abilities. STAR stands for
+Situation, Task, Action, and Result.
+
 ### Case 1 - Tax calculation service refactoring
 
 **Situation**: Describe the situation and when it took place.
@@ -191,6 +195,38 @@ START - 4-8 sentences to answer
 
 Tell me about a challenge you faced in your last project.
 Give me an example of most interesting tasks you have worked on.
-Tell me about your last project.
+
+------------------------------------------------------------------------------------------------------------------------
+
+# Tell me about your last project?
+
+**Situation**:
+During my recent project, the client was working on the development of a fresh UI for their e-commerce service,
+utilizing capabilities of the SPA. Additionally, there was a specific requirement to utilize GraphQL instead of a
+traditional REST API. It is important to note that there was no existing public API available, as the client's existing
+application was built using SSR (Server-Side Rendering) technology.
+
+**Task**: Our team was given the objective of developing a GraphQL API to provide a modern and convenient data access
+layer while maximizing the reuse of existing business logic.
+
+**Action**: Starting with a deep analysis of the existing codebase, we proceeded with step by step implementation of the
+GQL API providing the essential functionalities utilized by the application. Server-side caching was also used in order
+to increase the performance of the API, since some operations required a significant amount of time to complete.
+
+**Result**: As a result of our efforts, we achieved a complete replication of the existing API, making it accessible for
+GraphQL queries. This smooth transition allowed the client to migrate their service seamlessly to a modern UI while
+preserving the full user experience. Additionally, the implementation of backend caching significantly improved the
+efficiency of long-running requests, resulting in an enhanced overall experience when interacting with the API.
+
+------------------------------------------------------------------------------------------------------------------------
+
 Tell me about the time when the timeline you were given was not achievable and how you manage that.
-Tell me about the previous mistake you made and what you learned from it. 
+Tell me about the previous mistake you made and what you learned from it.
+
+should I go into details?
+
+How to avoid mistakes?
+
+* prefer using "I" instead of "We", since client examining you, and not your team
+* do not tell customers name as it could be a part of NDA
+
