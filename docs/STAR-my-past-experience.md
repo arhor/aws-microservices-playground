@@ -139,6 +139,7 @@ of the configuration, the average request processing time was reduced by approxi
 ### Give me an example of most interesting tasks you have worked on (creating a custom test framework based on Newman)
 
 **Situation**:
+
 ```text
 During my time at a major TravelTech company, I was involved in a project focused on developing a platform API for
 managing advertising campaigns for property owners, such as hotels and guest houses. The existing approach relied on
@@ -147,6 +148,7 @@ files, making it difficult to work with them effectively.
 ```
 
 **Task**:
+
 ```text
 I was assigned the task of finding a solution to this problem and implementing a more convenient framework for writing
 end-to-end (E2E) tests. The goal was to enable developers to execute, edit, and add tests locally, while also
@@ -154,6 +156,7 @@ facilitating easy test automation for integration into the CI pipeline.
 ```
 
 **Action**:
+
 ```text
 To address this challenge, I explored different approaches and decided to store the tests as plain JavaScript code
 instead of JSON files. I developed build scripts using JavaScript to traverse the test directory, converting the tests
@@ -161,6 +164,7 @@ into a JSON object that adhered to the Postman specification. This process ensur
 ```
 
 **Result**:
+
 ```text
 The resulting framework had a significant impact on simplifying the process of writing and maintaining E2E tests. It
 provided developers with the ability to execute, debug, and modify tests locally using Postman. Additionally, the
@@ -271,5 +275,7 @@ How to avoid mistakes?
 * prefer using "I" instead of "We", since client examining you, and not your team
 * do not tell customers name as it could be a part of NDA
 * omit framework names
-* go from high to details: high overview -> more detailed -> details on concrete point (should I go into details?)
+* go from high to details: high overview -> more detailed -> details on concrete point (
+    - should I go into details?
+    - should I delve into the details?
 * use 4-8 sentences to answer
