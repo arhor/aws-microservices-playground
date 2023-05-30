@@ -17,14 +17,14 @@ My name is Maksim, and I am a Senior Software Engineer specializing mostly in Ja
 Over the past six years I have gained experience working with various architectural styles, including monolithic, SOA
 and microservices.
 
-My responsibilities have involved developing new features and providing support for existing code bases. Primarily I 
+My responsibilities have involved developing new features and providing support for existing code bases. Primarily I
 worked with Spring Framework, but also have some experience using EJB and custom frameworks.
 
-In addition to back-end development, I have actively participated in front-end development, where I have worked with 
+In addition to back-end development, I have actively participated in front-end development, where I have worked with
 such UI libraries like React.js and Vue.js. I am also familiar with auxiliary libraries like Axios, MobX, Apollo Client,
 etc.
 
-Furthermore, I had the opportunity to contribute to the development of APIs using GraphQL, in addition to my work on 
+Furthermore, I had the opportunity to contribute to the development of APIs using GraphQL, in addition to my work on
 traditional REST services.
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -138,30 +138,36 @@ of the configuration, the average request processing time was reduced by approxi
 
 ### Give me an example of most interesting tasks you have worked on (creating a custom test framework based on Newman)
 
-**Situation**
-
-```
-Я работал в крупной TravelTech компании на проекте, занимающемся разработкой платформенного АПИ. Данный АПИ предоставлял
-ключевые возможности по управлению рекламными кампаниями для владельцев недвижимости, такой как отели, гостевые дома и
-так далее. Внутри мы использовали
-```
-
-**Task**
-
+**Situation**:
+```text
+During my time at a major TravelTech company, I was involved in a project focused on developing a platform API for
+managing advertising campaigns for property owners, such as hotels and guest houses. The existing approach relied on
+using Newman (the CLI version of Postman) for executing tests, but it posed challenges as the tests were stored as JSON
+files, making it difficult to work with them effectively.
 ```
 
+**Task**:
+```text
+I was assigned the task of finding a solution to this problem and implementing a more convenient framework for writing
+end-to-end (E2E) tests. The goal was to enable developers to execute, edit, and add tests locally, while also
+facilitating easy test automation for integration into the CI pipeline.
 ```
 
-**Action**
-
+**Action**:
+```text
+To address this challenge, I explored different approaches and decided to store the tests as plain JavaScript code
+instead of JSON files. I developed build scripts using JavaScript to traverse the test directory, converting the tests
+into a JSON object that adhered to the Postman specification. This process ensured compatibility with the Newman CLI.
 ```
 
-```
+**Result**:
+```text
+The resulting framework had a significant impact on simplifying the process of writing and maintaining E2E tests. It
+provided developers with the ability to execute, debug, and modify tests locally using Postman. Additionally, the
+framework offered a user-friendly and minimalistic dashboard that displayed the results of test execution.
 
-**Result**
-
-```
-
+Through my efforts, I successfully improved the test development workflow, enhancing efficiency and enabling seamless
+collaboration among team members.
 ```
 
 ------------------------------------------------------------------------------------------------------------------------
