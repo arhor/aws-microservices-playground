@@ -1,20 +1,63 @@
-The STAR framework is a structured method for answering behavioural interview questions, which are questions that ask
-you to provide specific examples of past experiences to demonstrate your skills and abilities. STAR stands for
-Situation, Task, Action, and Result.
+# Getting through the interview process using STAR technique
 
-### Case 1 - Tax calculation service refactoring
+The STAR framework is a structured method for answering behavioural interview questions, which are questions that ask
+you to provide specific examples of past experiences to demonstrate your skills and abilities.
+
+STAR stands for Situation, Task, Action, and Result.
+
+------------------------------------------------------------------------------------------------------------------------
+
+## Tell me about your last project? (FreshDirect)
 
 **Situation**: Describe the situation and when it took place.
 
-```
-The existing tax calculation service contained a significant amount of legacy code, boilerplate, and was challenging to 
-maintain and troubleshoot. It took a considerable amount of time to fix existing issues and introduce new functionality.
-New team members required a significant amount of time to learn how to work with this service.
+```text
+During my recent project, the client was working on the development of a fresh UI for their e-commerce service,
+utilizing capabilities of the SPA. Additionally, there was a specific requirement to utilize GraphQL instead of a
+traditional REST API. It is important to note that there was no existing public API available, as the client's existing
+application was built using SSR (Server-Side Rendering) technology.
 ```
 
 **Task**: Explain the task and what was the goal.
 
+```text
+Our team was given the objective of developing a GraphQL API to provide a modern and convenient data access
+layer while maximizing the reuse of existing business logic.
 ```
+
+**Action**: Provide details about the action you took to attain this.
+
+```text
+Starting with a deep analysis of the existing codebase, we proceeded with step by step implementation of the
+GQL API providing the essential functionalities utilized by the application. Server-side caching was also used in order
+to increase the performance of the API, since some operations required a significant amount of time to complete.
+```
+
+**Result**: Conclude with the result of your action.
+
+```text
+As a result of our efforts, we achieved a complete replication of the existing API, making it accessible for
+GraphQL queries. This smooth transition allowed the client to migrate their service seamlessly to a modern UI while
+preserving the full user experience. Additionally, the implementation of backend caching significantly improved the
+efficiency of long-running requests, resulting in an enhanced overall experience when interacting with the API.
+```
+
+------------------------------------------------------------------------------------------------------------------------
+
+## Tax calculation service refactoring
+
+**Situation**: Describe the situation and when it took place.
+
+```text
+I was working on a project in a FinTech company developing software for workforce management. One of the internal 
+services responsible for calculating taxes contained a significant amount of legacy code, boilerplate, and was 
+challenging to maintain and troubleshoot. Fixing issues and introducing new functionality was time consuming. New team 
+members required a significant amount of time to learn how to work with this service.
+```
+
+**Task**: Explain the task and what was the goal.
+
+```text
 The task was to refactor the existing codebase, applying some optimizations without changing the overall semantics. 
 The main goal was to simplify working with the service and reduce the time required for introducing new features and 
 fixing existing bugs.
@@ -22,7 +65,7 @@ fixing existing bugs.
 
 **Action**: Provide details about the action you took to attain this.
 
-```
+```text
 I discussed this issue with my team lead and proceeded with functional code decomposition. I identified duplicated code 
 fragments and leveraged the modern API provided by the Java version we were using. Additionally, I utilized the 
 capabilities offered by the Spring Framework.
@@ -30,13 +73,15 @@ capabilities offered by the Spring Framework.
 
 **Result**: Conclude with the result of your action.
 
-```
+```text
 Working with the service was significantly simplified. Support tasks became feasible for the entire team without any 
 specific training, eliminating the need for a single developer solely responsible for the service. Through fine-tuning
 of the configuration, the average request processing time was reduced by approximately 10%.
 ```
 
-### Case 2 - 'External tax integration' service moved to a separate gradle module
+------------------------------------------------------------------------------------------------------------------------
+
+## 'External tax integration' related code moved to a separate gradle module
 
 **Situation**: Describe the situation and when it took place.
 
@@ -62,7 +107,9 @@ of the configuration, the average request processing time was reduced by approxi
 
 ```
 
-### Case 3 - Creating a custom test framework based on Newman (CLI version of Postman)
+------------------------------------------------------------------------------------------------------------------------
+
+### Creating a custom test framework based on Newman (CLI version of Postman)
 
 **Situation**: Describe the situation and when it took place.
 
@@ -88,7 +135,9 @@ of the configuration, the average request processing time was reduced by approxi
 
 ```
 
-### Case 4 - Adapting spring-data-redis to a new service in the POC phase
+------------------------------------------------------------------------------------------------------------------------
+
+### Adapting spring-data-redis to a new service in the POC phase
 
 **Situation**: Describe the situation and when it took place.
 
@@ -171,13 +220,6 @@ Here are some possible actions that might have taken:
 
 * describe failure
 * describe success
-
-fresh direct - kotlin
-
-from high to details: high overview -> more detailed -> details on concrete point
-
-training
-
 * my achievements
 * great success
 * great failure
@@ -185,48 +227,15 @@ training
 * customer communication
 * high-level project overview
 
-omit framework names
-
-communication, code review, coding, team-communication
-
-try to make prioritization documentation (priority framework)
-
-START - 4-8 sentences to answer
-
 Tell me about a challenge you faced in your last project.
 Give me an example of most interesting tasks you have worked on.
-
-------------------------------------------------------------------------------------------------------------------------
-
-# Tell me about your last project?
-
-**Situation**:
-During my recent project, the client was working on the development of a fresh UI for their e-commerce service,
-utilizing capabilities of the SPA. Additionally, there was a specific requirement to utilize GraphQL instead of a
-traditional REST API. It is important to note that there was no existing public API available, as the client's existing
-application was built using SSR (Server-Side Rendering) technology.
-
-**Task**: Our team was given the objective of developing a GraphQL API to provide a modern and convenient data access
-layer while maximizing the reuse of existing business logic.
-
-**Action**: Starting with a deep analysis of the existing codebase, we proceeded with step by step implementation of the
-GQL API providing the essential functionalities utilized by the application. Server-side caching was also used in order
-to increase the performance of the API, since some operations required a significant amount of time to complete.
-
-**Result**: As a result of our efforts, we achieved a complete replication of the existing API, making it accessible for
-GraphQL queries. This smooth transition allowed the client to migrate their service seamlessly to a modern UI while
-preserving the full user experience. Additionally, the implementation of backend caching significantly improved the
-efficiency of long-running requests, resulting in an enhanced overall experience when interacting with the API.
-
-------------------------------------------------------------------------------------------------------------------------
-
 Tell me about the time when the timeline you were given was not achievable and how you manage that.
 Tell me about the previous mistake you made and what you learned from it.
-
-should I go into details?
 
 How to avoid mistakes?
 
 * prefer using "I" instead of "We", since client examining you, and not your team
 * do not tell customers name as it could be a part of NDA
-
+* omit framework names
+* go from high to details: high overview -> more detailed -> details on concrete point (should I go into details?)
+* use 4-8 sentences to answer
