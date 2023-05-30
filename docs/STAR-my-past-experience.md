@@ -12,7 +12,7 @@ STAR stands for _Situation_, _Task_, _Action_, and _Result_:
 
 ## Introduction
 
-Hello, my name is Maksim.
+My name is Maksim.
 
 Over the past six years I have been working as a Java/Kotlin developer.
 
