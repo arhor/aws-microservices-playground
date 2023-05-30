@@ -43,8 +43,8 @@ built using SSR (Server-Side Rendering) technology.
 **Task**
 
 ```text
-Our team was given the objective of developing a GraphQL API to provide a modern and convenient data access
-layer while maximizing the reuse of existing business logic.
+Our team was given the objective of developing a GraphQL API to provide a modern and convenient data access layer while
+maximizing the reuse of existing business logic.
 ```
 
 **Action**
@@ -73,20 +73,20 @@ efficiency of long-running requests, resulting in an enhanced overall experience
 ```text
 I was working on a project in a FinTech company developing software for workforce management. One of the internal 
 services responsible for calculating taxes contained a significant amount of legacy code, boilerplate, and was 
-challenging to maintain and troubleshoot. Fixing issues and introducing new functionality was time consuming. New team 
+challenging to maintain and troubleshoot. Fixing issues and introducing new features was time consuming. New team 
 members required a significant amount of time to learn how to work with this service.
 ```
 
 **Task**
 
 ```text
-I discussed this issue with my team lead and was assigned to the task, consisting of the following parts:
+I discussed this issue with my team-lead and was assigned to the task, consisting of the following parts:
 
 * refactor the existing codebase
 * apply possible optimizations without changing the overall semantics
 
-The main goal was to simplify working with the service and reduce the time required for introducing new features and 
-fixing existing bugs.
+The main goal was to simplify working with the service and reduce the time required for introducing new features and bug
+fixing.
 ```
 
 **Action**
@@ -94,8 +94,8 @@ fixing existing bugs.
 ```text
 I've started with functional code decomposition - identified duplicated code fragments and leveraged the modern API
 provided by the Java 8, which was used by that service. Additionally, I utilized the capabilities offered by the Spring 
-Framework, like simplified DB interaction via Spring-JDBC module, changing embedded server from Tomcat to Undertow,
-providing smaller memory footprint.
+Framework, like simplified DB interaction via Spring-JDBC module, and also changed embedded server from Tomcat to 
+Undertow, which provides smaller memory footprint.
 ```
 
 **Result**
