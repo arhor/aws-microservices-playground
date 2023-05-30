@@ -10,6 +10,25 @@ STAR stands for _Situation_, _Task_, _Action_, and _Result_:
 * **Action** - Provide details about the action you took to attain this.
 * **Result** - Conclude with the result of your action.
 
+## Introduction
+
+Hello, my name is Maksim.
+
+Over the past six years I have been working as a Java/Kotlin developer.
+
+Throughout my career I have gained experience working with various architectural styles, including monolithic, SOA and
+microservices.
+
+My responsibilities have involved developing new features and providing support for existing code bases. Primarily I 
+worked with Spring Framework, but also have some experience using EJB and custom frameworks.
+
+In addition to back-end development, I have actively participated in front-end development, where I have worked with 
+such UI libraries like React.js and Vue.js. I am also familiar with auxiliary libraries like Axios, MobX, Apollo Client,
+etc.
+
+Furthermore, I had the opportunity to contribute to the development of APIs using GraphQL, in addition to my work on 
+traditional REST services.
+
 ------------------------------------------------------------------------------------------------------------------------
 
 ## Tell me about your last project? (FreshDirect)
@@ -119,27 +138,29 @@ of the configuration, the average request processing time was reduced by approxi
 
 ------------------------------------------------------------------------------------------------------------------------
 
-### Creating a custom test framework based on Newman (CLI version of Postman)
+### Give me an example of most interesting tasks you have worked on (creating a custom test framework based on Newman)
 
-**Situation**: Describe the situation and when it took place.
+**Situation**
+
+```
+Я работал в крупной TravelTech компании на проекте, занимающемся разработкой платформенного АПИ. Данный АПИ предоставлял
+ключевые возможности по управлению рекламными кампаниями для владельцев недвижимости, такой как отели, гостевые дома и
+так далее. Внутри мы использовали
+```
+
+**Task**
 
 ```
 
 ```
 
-**Task**: Explain the task and what was the goal.
+**Action**
 
 ```
 
 ```
 
-**Action**: Provide details about the action you took to attain this.
-
-```
-
-```
-
-**Result**: Conclude with the result of your action.
+**Result**
 
 ```
 
@@ -238,7 +259,6 @@ Here are some possible actions that might have taken:
 * high-level project overview
 
 Tell me about a challenge you faced in your last project.
-Give me an example of most interesting tasks you have worked on.
 Tell me about the time when the timeline you were given was not achievable and how you manage that.
 Tell me about the previous mistake you made and what you learned from it.
 
