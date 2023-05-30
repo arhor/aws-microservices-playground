@@ -3,29 +3,34 @@
 The STAR framework is a structured method for answering behavioural interview questions, which are questions that ask
 you to provide specific examples of past experiences to demonstrate your skills and abilities.
 
-STAR stands for Situation, Task, Action, and Result.
+STAR stands for _Situation_, _Task_, _Action_, and _Result_:
+
+* **Situation** - Describe the situation and when it took place.
+* **Task** - Explain the task and what was the goal.
+* **Action** - Provide details about the action you took to attain this.
+* **Result** - Conclude with the result of your action.
 
 ------------------------------------------------------------------------------------------------------------------------
 
 ## Tell me about your last project? (FreshDirect)
 
-**Situation**: Describe the situation and when it took place.
+**Situation**
 
 ```text
-During my recent project, the client was working on the development of a fresh UI for their e-commerce service,
-utilizing capabilities of the SPA. Additionally, there was a specific requirement to utilize GraphQL instead of a
-traditional REST API. It is important to note that there was no existing public API available, as the client's existing
-application was built using SSR (Server-Side Rendering) technology.
+During my last project, the client was developing a fresh UI for their e-commerce service, utilizing capabilities
+of the SPA. Additionally, there was a specific requirement to utilize GraphQL instead of a traditional REST API.
+It is important to note that there was no existing public API available, as the client's existing application was
+built using SSR (Server-Side Rendering) technology.
 ```
 
-**Task**: Explain the task and what was the goal.
+**Task**
 
 ```text
 Our team was given the objective of developing a GraphQL API to provide a modern and convenient data access
 layer while maximizing the reuse of existing business logic.
 ```
 
-**Action**: Provide details about the action you took to attain this.
+**Action**
 
 ```text
 Starting with a deep analysis of the existing codebase, we proceeded with step by step implementation of the
@@ -33,7 +38,7 @@ GQL API providing the essential functionalities utilized by the application. Ser
 to increase the performance of the API, since some operations required a significant amount of time to complete.
 ```
 
-**Result**: Conclude with the result of your action.
+**Result**
 
 ```text
 As a result of our efforts, we achieved a complete replication of the existing API, making it accessible for
@@ -46,7 +51,7 @@ efficiency of long-running requests, resulting in an enhanced overall experience
 
 ## Tax calculation service refactoring
 
-**Situation**: Describe the situation and when it took place.
+**Situation**
 
 ```text
 I was working on a project in a FinTech company developing software for workforce management. One of the internal 
@@ -55,26 +60,31 @@ challenging to maintain and troubleshoot. Fixing issues and introducing new func
 members required a significant amount of time to learn how to work with this service.
 ```
 
-**Task**: Explain the task and what was the goal.
+**Task**
 
 ```text
-The task was to refactor the existing codebase, applying some optimizations without changing the overall semantics. 
+I discussed this issue with my team lead and was assigned to the task, consisting of the following parts:
+
+* refactor the existing codebase
+* apply possible optimizations without changing the overall semantics
+
 The main goal was to simplify working with the service and reduce the time required for introducing new features and 
 fixing existing bugs.
 ```
 
-**Action**: Provide details about the action you took to attain this.
+**Action**
 
 ```text
-I discussed this issue with my team lead and proceeded with functional code decomposition. I identified duplicated code 
-fragments and leveraged the modern API provided by the Java version we were using. Additionally, I utilized the 
-capabilities offered by the Spring Framework.
+I've started with functional code decomposition - identified duplicated code fragments and leveraged the modern API
+provided by the Java 8, which was used by that service. Additionally, I utilized the capabilities offered by the Spring 
+Framework, like simplified DB interaction via Spring-JDBC module, changing embedded server from Tomcat to Undertow,
+providing smaller memory footprint.
 ```
 
-**Result**: Conclude with the result of your action.
+**Result**
 
 ```text
-Working with the service was significantly simplified. Support tasks became feasible for the entire team without any 
+Working with the service was significantly simplified. Support tasks became available for the entire team without any 
 specific training, eliminating the need for a single developer solely responsible for the service. Through fine-tuning
 of the configuration, the average request processing time was reduced by approximately 10%.
 ```
