@@ -12,12 +12,10 @@ STAR stands for _Situation_, _Task_, _Action_, and _Result_:
 
 ## Introduction
 
-My name is Maksim.
+My name is Maksim, and I am a Senior Software Engineer specializing mostly in Java/Kotlin back-ends.
 
-Over the past six years I have been working as a Java/Kotlin developer.
-
-Throughout my career I have gained experience working with various architectural styles, including monolithic, SOA and
-microservices.
+Over the past six years I have gained experience working with various architectural styles, including monolithic, SOA
+and microservices.
 
 My responsibilities have involved developing new features and providing support for existing code bases. Primarily I 
 worked with Spring Framework, but also have some experience using EJB and custom frameworks.
